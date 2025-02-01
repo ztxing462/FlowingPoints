@@ -18,6 +18,12 @@
             --particle-dark: #666;
             --particle-light: #888;
         }
+        /* 在日间主题下添加图片反色效果 */
+        [data-theme="day"] .sidebar-image {
+            filter: invert(1);
+            opacity: 0.8;
+            transition: filter 0.3s ease;
+        }
 
         body {
             margin: 0;
@@ -31,16 +37,24 @@
         .nav {
             position: fixed;
             top: 0;
+            left: 0;
             width: 100%;
-            padding: 20px;
+            padding: 12px 30px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             z-index: 1002;
-            transition: padding 0.3s ease;
+            background: var(--bg-color);
+            box-sizing: border-box;
+            transition: transform 0.3s ease;
         }
-
-        /* 当侧边栏展开时调整导航栏位置 */
-
+        
+        /* 左侧部分样式 */
+        .left-section {
+            display: flex;
+            align-items: center;
+            gap: 15px; /* 左侧元素之间的间距 */
+        }
 
         .brand {
             font-size: 1.8em;
@@ -82,27 +96,33 @@
             margin-bottom: 20px;
         }
 
-        /* 联系方式浮动按钮 */
-        .contact-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(255,255,255,0.1);
-            padding: 10px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
+/* 容器样式 */
+.contact-btn-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex; /* 使用 flex 布局 */
+    gap: 10px; /* 按钮之间的间距 */
+    z-index: 1000;
+}
 
-        .contact-btn:hover {
-            background: rgba(255,255,255,0.2);
-            transform: translateY(-2px);
-        }
-        /* 新增导航栏修正样式 */
-        .nav {
-            box-sizing: border-box; /* 新增 */
-            padding: 20px 30px; /* 调整左右内边距 */
-        }
+/* 每个按钮样式 */
+.contact-btn {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex; /* 确保内容水平排列 */
+    align-items: center; /* 垂直居中 */
+    justify-content: center; /* 水平居中 */
+}
+
+/* 鼠标悬停效果 */
+.contact-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
 
         /* 新增主题按钮样式 */
         #themeToggle {
@@ -162,8 +182,13 @@
     z-index: 1001;
 }
 
+/* 当侧边栏展开时调整导航栏位置 */
 .sidebar:not(.collapsed) + .nav {
     padding-left: 240px;
+}
+/* 侧边栏展开时移动导航栏 */
+.sidebar:not(.collapsed) ~ .nav {
+    transform: translateX(240px);
 }
 
 .sidebar.collapsed {
@@ -191,20 +216,43 @@
 .sidebar-content {
     padding: 15px;
     overflow-y: auto;
+    height: calc(100vh - 70px); /* 计算可用高度 */
 }
 
 .image-list {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(1, 1fr);
     gap: 10px;
+    padding-bottom: 20px; /* 增加底部留白 */
+}
+
+.image-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.image-item:hover {
+    background: rgba(255,255,255,0.1);
 }
 
 .sidebar-image {
-    width: 100%;
-    height: auto;
-    cursor: pointer;
+    width: auto;
+    height: 130px; /* 固定高度 */
+    object-fit: cover; /* 保持图片比例 */
     border-radius: 8px;
+    cursor: pointer;
     transition: transform 0.2s;
+}
+
+.image-name {
+    flex: 1;
+    color: var(--text-color);
 }
 
 .sidebar-image:hover {
@@ -227,26 +275,192 @@
     
     <!-- 导航栏 -->
     <nav class="nav">
-        <button id="sidebarToggle" class="sidebar-toggle-btn">☰</button>
-        <a href="index.html" class="brand">Code</a>
-        <button id="themeToggle">🌙</button>
+        <div class="left-section">
+            <a href="index.html" class="brand">Ark-Points</a>
+            <button id="sidebarToggle" class="sidebar-toggle-btn">☰</button>
+        </div>
+        <button id="themeToggle" class="theme-toggle-btn">🌙</button>
     </nav>
 
      <!-- 左侧边栏 -->
      <div class="sidebar collapsed" id="sidebar">
         <div class="sidebar-header">
-            <h3>固定图片</h3>
+            <h3 style="margin: 0;">阵营图片</h3>
         </div>
-    <div class="sidebar-content">
-        <div class="image-list">
-            <!-- 图片列表 -->
-            <img src="img/企鹅物流.png" alt="企鹅物流" class="sidebar-image" data-src="img/企鹅物流.png">
-            <img src="img/炎.png" alt="炎" class="sidebar-image" data-src="img/炎.png">
-            <img src="img/东.png" alt="东" class="sidebar-image" data-src="img/东.png">
-            <!-- 添加更多图片 -->
+        <div class="sidebar-content">
+            <div class="image-list">
+                <div class="image-item">
+                    <img src="img/罗德岛.png" alt="罗德岛" class="sidebar-image" data-src="img/罗德岛.png">
+                    <span class="image-name">罗德岛</span>
+                </div>
+<div class="image-item">
+                    <img src="img/炎.png" alt="炎" class="sidebar-image" data-src="img/炎.png">
+                    <span class="image-name">炎</span>
+                </div>
+<div class="image-item">
+                    <img src="img/炎-龙门.png" alt="炎-龙门" class="sidebar-image" data-src="img/炎-龙门.png">
+                    <span class="image-name">炎-龙门</span>
+                </div>
+<div class="image-item">
+                    <img src="img/阿戈尔.png" alt="阿戈尔" class="sidebar-image" data-src="img/阿戈尔.png">
+                    <span class="image-name">阿戈尔</span>
+                </div>
+<div class="image-item">
+                    <img src="img/玻利瓦尔.png" alt="玻利瓦尔" class="sidebar-image" data-src="img/玻利瓦尔.png">
+                    <span class="image-name">玻利瓦尔</span>
+                </div>
+<div class="image-item">
+                    <img src="img/哥伦比亚.png" alt="哥伦比亚" class="sidebar-image" data-src="img/哥伦比亚.png">
+                    <span class="image-name">哥伦比亚</span>
+                </div>
+<div class="image-item">
+                    <img src="img/东.png" alt="东" class="sidebar-image" data-src="img/东.png">
+                    <span class="image-name">东</span>
+                </div>
+<div class="image-item">
+                    <img src="img/伊比利亚.png" alt="伊比利亚" class="sidebar-image" data-src="img/伊比利亚.png">
+                    <span class="image-name">伊比利亚</span>
+                </div>
+<div class="image-item">
+                    <img src="img/卡西米尔.png" alt="卡西米尔" class="sidebar-image" data-src="img/卡西米尔.png">
+                    <span class="image-name">卡西米尔</span>
+                </div>
+<div class="image-item">
+                    <img src="img/谢拉格.png" alt="谢拉格" class="sidebar-image" data-src="img/谢拉格.png">
+                    <span class="image-name">谢拉格</span>
+                </div>
+<div class="image-item">
+                    <img src="img/拉特兰.png" alt="拉特兰" class="sidebar-image" data-src="img/拉特兰.png">
+                    <span class="image-name">拉特兰</span>
+                </div>
+<div class="image-item">
+                    <img src="img/莱塔尼亚.png" alt="莱塔尼亚" class="sidebar-image" data-src="img/莱塔尼亚.png">
+                    <span class="image-name">莱塔尼亚</span>
+                </div>
+<div class="image-item">
+                    <img src="img/米诺斯.png" alt="米诺斯" class="sidebar-image" data-src="img/米诺斯.png">
+                    <span class="image-name">米诺斯</span>
+                </div>
+<div class="image-item">
+                    <img src="img/雷姆必拓.png" alt="雷姆必拓" class="sidebar-image" data-src="img/雷姆必拓.png">
+                    <span class="image-name">雷姆必拓</span>
+                </div>
+<div class="image-item">
+                    <img src="img/萨米.png" alt="萨米" class="sidebar-image" data-src="img/萨米.png">
+                    <span class="image-name">萨米</span>
+                </div>
+<div class="image-item">
+                    <img src="img/萨尔贡.png" alt="萨尔贡" class="sidebar-image" data-src="img/萨尔贡.png">
+                    <span class="image-name">萨尔贡</span>
+                </div>
+<div class="image-item">
+                    <img src="img/叙拉古.png" alt="叙拉古" class="sidebar-image" data-src="img/叙拉古.png">
+                    <span class="image-name">叙拉古</span>
+                </div>
+<div class="image-item">
+                    <img src="img/乌萨斯.png" alt="乌萨斯" class="sidebar-image" data-src="img/乌萨斯.png">
+                    <span class="image-name">乌萨斯</span>
+                </div>
+<div class="image-item">
+                    <img src="img/维多利亚.png" alt="维多利亚" class="sidebar-image" data-src="img/维多利亚.png">
+                    <span class="image-name">维多利亚</span>
+                </div>
+<div class="image-item">
+                    <img src="img/罗德岛-精英干员.png" alt="罗德岛-精英干员" class="sidebar-image" data-src="img/罗德岛-精英干员.png">
+                    <span class="image-name">罗德岛-精英干员</span>
+                </div>
+<div class="image-item">
+                    <img src="img/S.W.E.E.P..png" alt="S.W.E.E.P." class="sidebar-image" data-src="img/S.W.E.E.P..png">
+                    <span class="image-name">S.W.E.E.P.</span>
+                </div>
+<div class="image-item">
+                    <img src="img/巴别塔.png" alt="巴别塔" class="sidebar-image" data-src="img/巴别塔.png">
+                    <span class="image-name">巴别塔</span>
+                </div>
+<div class="image-item">
+                    <img src="img/深海猎人.png" alt="深海猎人" class="sidebar-image" data-src="img/深海猎人.png">
+                    <span class="image-name">深海猎人</span>
+                </div>
+<div class="image-item">
+                    <img src="img/黑钢国际.png" alt="黑钢国际" class="sidebar-image" data-src="img/黑钢国际.png">
+                    <span class="image-name">黑钢国际</span>
+                </div>
+<div class="image-item">
+                    <img src="img/格拉斯哥帮.png" alt="格拉斯哥帮" class="sidebar-image" data-src="img/格拉斯哥帮.png">
+                    <span class="image-name">格拉斯哥帮</span>
+                </div>
+<div class="image-item">
+                    <img src="img/喀兰贸易.png" alt="喀兰贸易" class="sidebar-image" data-src="img/喀兰贸易.png">
+                    <span class="image-name">喀兰贸易</span>
+                </div>
+<div class="image-item">
+                    <img src="img/龙门近卫局.png" alt="龙门近卫局" class="sidebar-image" data-src="img/龙门近卫局.png">
+                    <span class="image-name">龙门近卫局</span>
+                </div>
+<div class="image-item">
+                    <img src="img/企鹅物流.png" alt="企鹅物流" class="sidebar-image" data-src="img/企鹅物流.png">
+                    <span class="image-name">企鹅物流</span>
+                </div>
+<div class="image-item">
+                    <img src="img/红松骑士团.png" alt="红松骑士团" class="sidebar-image" data-src="img/红松骑士团.png">
+                    <span class="image-name">红松骑士团</span>
+                </div>
+<div class="image-item">
+                    <img src="img/莱茵生命.png" alt="莱茵生命" class="sidebar-image" data-src="img/莱茵生命.png">
+                    <span class="image-name">莱茵生命</span>
+                </div>
+<div class="image-item">
+                    <img src="img/汐斯塔.png" alt="汐斯塔" class="sidebar-image" data-src="img/汐斯塔.png">
+                    <span class="image-name">汐斯塔</span>
+                </div>
+<div class="image-item">
+                    <img src="img/炎-岁.png" alt="炎-岁" class="sidebar-image" data-src="img/炎-岁.png">
+                    <span class="image-name">炎-岁</span>
+                </div>
+<div class="image-item">
+                    <img src="img/行动组A4.png" alt="行动组A4" class="sidebar-image" data-src="img/行动组A4.png">
+                    <span class="image-name">行动组A4</span>
+                </div>
+<div class="image-item">
+                    <img src="img/行动预备组A1.png" alt="行动预备组A1" class="sidebar-image" data-src="img/行动预备组A1.png">
+                    <span class="image-name">行动预备组A1</span>
+                </div>
+<div class="image-item">
+                    <img src="img/行动预备组A4.png" alt="行动预备组A4" class="sidebar-image" data-src="img/行动预备组A4.png">
+                    <span class="image-name">行动预备组A4</span>
+                </div>
+<div class="image-item">
+                    <img src="img/行动预备组A6.png" alt="行动预备组A6" class="sidebar-image" data-src="img/行动预备组A6.png">
+                    <span class="image-name">行动预备组A6</span>
+                </div>
+<div class="image-item">
+                    <img src="img/贾维团伙.png" alt="贾维团伙" class="sidebar-image" data-src="img/贾维团伙.png">
+                    <span class="image-name">贾维团伙</span>
+                </div>
+<div class="image-item">
+                    <img src="img/使徒.png" alt="使徒" class="sidebar-image" data-src="img/使徒.png">
+                    <span class="image-name">使徒</span>
+                </div>
+<div class="image-item">
+                    <img src="img/鲤氏侦探事务所.png" alt="鲤氏侦探事务所" class="sidebar-image" data-src="img/鲤氏侦探事务所.png">
+                    <span class="image-name">鲤氏侦探事务所</span>
+                </div>
+<div class="image-item">
+                    <img src="img/彩虹小队.png" alt="彩虹小队" class="sidebar-image" data-src="img/彩虹小队.png">
+                    <span class="image-name">彩虹小队</span>
+                </div>
+<div class="image-item">
+                    <img src="img/乌萨斯学生自治团.png" alt="乌萨斯学生自治团" class="sidebar-image" data-src="img/乌萨斯学生自治团.png">
+                    <span class="image-name">乌萨斯学生自治团</span>
+                </div>
+<div class="image-item">
+                    <img src="img/深池.png" alt="深池" class="sidebar-image" data-src="img/深池.png">
+                    <span class="image-name">深池</span>
+                </div>
+
+            </div>
         </div>
     </div>
-</div>
 
     <div class="upload-loading" id="loadingText">正在解析图片...</div>
     <!-- 上传区域 -->
@@ -262,10 +476,21 @@
  <div id="progressBar">
     <div id="progressFill"></div>
 </div>
-    <!-- 联系方式 -->
-    <div class="contact-btn" title="联系方式">
-        📧 联系我 2943984952@qq.com
+<div class="contact-btn-container">
+    <div class="contact-btn" title="素材来源">
+        <a href="https://wiki.biligame.com/arknights/?curid=1" target="_blank">
+            <img src="img/bwiki.png" alt="明日方舟bwiki" width="80" height="40">
+        </a>
     </div>
+    <div class="contact-btn" title="github"> 
+        <a href="https://github.com/BlackCoder0/Arknights-FlowingPoints" target="_blank">
+            <img src="img/github2.png" alt="github" width="40" height="40"">
+        </a>
+    </div>
+    <div class="contact-btn" title="联系方式">
+        <a href="mailto:2943984952@qq.com" class="brand">📧 Code</a>
+    </div>
+</div>
     <script>
         // 配置对象
         const CONFIG = {
@@ -331,13 +556,11 @@
 const sidebar = document.getElementById('sidebar');
 const sidebarToggle = document.getElementById('sidebarToggle');
 
-// 初始化时默认折叠侧边栏
-document.addEventListener('DOMContentLoaded', () => {
-    sidebar.classList.add('collapsed');
-});
+// 初始隐藏侧边栏
+//sidebar.classList.add('collapsed');
 
-// 修改切换逻辑
-document.getElementById('sidebarToggle').addEventListener('click', () => {
+// 切换侧边栏
+sidebarToggle.addEventListener('click', () => {
     sidebar.classList.toggle('collapsed');
 });
 
@@ -345,7 +568,7 @@ document.getElementById('sidebarToggle').addEventListener('click', () => {
 document.querySelectorAll('.sidebar-image').forEach(image => {
     image.addEventListener('click', async () => {
         const file = {
-            type: 'image/png', // 假设所有固定图片都是 PNG 格式
+            type: 'image/png', 
             name: image.alt,
             src: image.dataset.src
         };
