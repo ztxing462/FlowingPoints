@@ -1,135 +1,457 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
-    <title>磁性粒子效果</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code's Particle Studio</title>
     <style>
+        :root {
+            --bg-color: #111;
+            --text-color: #fff;
+            --particle-dark: #333;
+            --particle-light: #ccc;
+        }
+
+        [data-theme="day"] {
+            --bg-color: #f0f0f0;
+            --text-color: #333;
+            --particle-dark: #666;
+            --particle-light: #888;
+        }
+
         body {
             margin: 0;
-            overflow: hidden;
-            background: #000;
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background 0.3s ease;
         }
-        canvas {
-            display: block;
+
+        /* 导航栏样式 */
+        .nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            z-index: 1000;
         }
+
+        .brand {
+            font-size: 1.8em;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: opacity 0.3s;
+        }
+
+        .brand:hover {
+            opacity: 0.8;
+        }
+
+        /* 上传区域样式 */
+        .upload-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 400px;
+            height: 300px;
+            border: 2px dashed var(--text-color);
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .upload-container:hover {
+            border-color: var(--particle-light);
+        }
+
+        .upload-icon {
+            font-size: 3em;
+            margin-bottom: 20px;
+        }
+
+        /* 联系方式浮动按钮 */
+        .contact-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255,255,255,0.1);
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .contact-btn:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+        /* 新增导航栏修正样式 */
+        .nav {
+            box-sizing: border-box; /* 新增 */
+            padding: 20px 30px; /* 调整左右内边距 */
+        }
+
+        /* 新增主题按钮样式 */
+        #themeToggle {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            padding: 5px;
+            margin-right: -5px; /* 修正边缘间距 */
+            color: var(--text-color);
+        }
+
+        /* 新增上传反馈样式 */
+        .upload-loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            display: none;
+        }
+        
+        /* 新增进度条样式 */
+        #progressBar {
+            position: fixed;
+            top: 60%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 3px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 2px;
+            display: none;
+        }
+        
+        #progressFill {
+            height: 100%;
+            background: #00ff88;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+    
     </style>
 </head>
-<body>
+<body data-theme="night">
+    
+    <!-- 导航栏 -->
+    <nav class="nav">
+        <a href="#" class="brand">Code</a>
+        <button id="themeToggle">🌙</button>
+    </nav>
+    <div class="upload-loading" id="loadingText">正在解析图片...</div>
+    <!-- 上传区域 -->
+    <div class="upload-container" id="uploadBox">
+        <div class="upload-icon">🖼️</div>
+        <p>点击或拖拽上传图片</p>
+    </div>
+
+    <!-- 画布容器 -->
     <canvas id="canvas"></canvas>
+ <!-- 在画布后添加进度条 -->
+ <div id="progressBar">
+    <div id="progressFill"></div>
+</div>
+    <!-- 联系方式 -->
+    <div class="contact-btn" title="联系方式">
+        📧 code@example.com
+    </div>
 
     <script>
+        // 配置对象
+        const CONFIG = {
+            particleSize: 3,// 粒子大小，约1mm
+        particleMargin: 1,//粒子间距
+        repulsionRadius: 115,//排斥作用范围
+        repulsionForce: 1.7,//排斥力强度
+        friction: 0.15,//运动摩擦力
+        returnSpeed: 0.01,//返回原位的速度
+            samplingStep: 5,  // 图像采样步长
+            maxDisplayRatio: 0.8, // 最大显示比例为屏幕的80%
+            asyncBatchSize: 200    // 每批生成的粒子数量
+        };
+
+        // 系统状态
+        let state = {
+            theme: 'night',
+            particles: [],
+            currentImage: null,
+            mouse: { x: -1000, y: -1000 }
+        };
+
+        // DOM元素引用
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
+        const themeToggle = document.getElementById('themeToggle');
+        const uploadBox = document.getElementById('uploadBox');
+
+        /* 核心功能模块 */
         
-        // 设置画布尺寸
-        function resizeCanvas() {
+        // 初始化画布
+        function initCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
         }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
 
-        // 粒子参数
-        const particleSize = 3; // 粒子大小，约1mm
-        const particleMargin = 1;//粒子间距
-        const repulsionRadius = 115;//排斥作用范围
-        const repulsionForce = 1.7;//排斥力强度
-        const friction = 0.15;//运动摩擦力
-        const returnSpeed = 0.01;//返回原位的速度
+        // 主题切换功能
+        function toggleTheme() {
+            state.theme = state.theme === 'night' ? 'day' : 'night';
+            document.body.setAttribute('data-theme', state.theme);
+            themeToggle.textContent = state.theme === 'night' ? '🌙' : '☀️';
+            
+            // 更新现有粒子颜色
+            state.particles.forEach(p => {
+                p.baseColor = getParticleColor(p.originalColor);
+            });
+        }
 
-        // 存储粒子和鼠标位置
-        let particles = [];
-        let mouse = { x: -1000, y: -1000 };
+        // 获取粒子颜色
+        function getParticleColor(original) {
+            const isDark = original === 'dark';
+            return state.theme === 'night' ? 
+            (isDark ? '#333' : '#ccc') : 
+            (isDark ? '#000' : '#ccc');
+        }
 
+        // 图像处理模块
+        async function processImage(file) {
+            return new Promise((resolve, reject) => {
+                if (!file.type.startsWith('image/')) {
+                    return reject(new Error('请选择图片文件'));
+                }
+
+                const img = new Image();
+                img.onload = function() {
+                    try {
+                        const tempCanvas = document.createElement('canvas');
+                        const tempCtx = tempCanvas.getContext('2d');
+                        
+                        // 添加尺寸限制
+                        const MAX_SIZE = 2000;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > MAX_SIZE || height > MAX_SIZE) {
+                            const ratio = Math.min(MAX_SIZE/width, MAX_SIZE/height);
+                            width *= ratio;
+                            height *= ratio;
+                        }
+
+                        tempCanvas.width = width;
+                        tempCanvas.height = height;
+                        
+                        tempCtx.drawImage(img, 0, 0, width, height);
+                        resolve(tempCanvas);
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+                
+                img.onerror = () => reject(new Error('图片加载失败'));
+                img.src = URL.createObjectURL(file);
+            });
+        }
+
+        // 生成粒子系统
+        function generateParticles(imageCanvas) {
+            try {
+                // 边界检查
+                if (!imageCanvas || !imageCanvas.getContext) {
+                    throw new Error('无效的画布对象');
+                }
+                const { width, height } = imageCanvas;
+                if (width <= 0 || height <= 0) {
+                    throw new Error('无效的图片尺寸');
+                }
+        
+                // 清空现有粒子
+                state.particles = [];
+        
+                // 获取图像数据
+                const imgData = imageCanvas.getContext('2d').getImageData(0, 0, width, height);
+                
+                // 计算居中位置
+                const offsetX = (window.innerWidth - width) / 2;
+                const offsetY = (window.innerHeight - height) / 2;
+        
+                // 采样图像数据
+                for (let y = 0; y < height; y += CONFIG.samplingStep) {
+                    for (let x = 0; x < width; x += CONFIG.samplingStep) {
+                        const alpha = imgData.data[(y * width + x) * 4 + 3];
+                        if (alpha > 128) { // 可见像素
+                            const brightness = getPixelBrightness(imgData, x, y);
+                            state.particles.push(new Particle(
+                                x + offsetX,
+                                y + offsetY,
+                                brightness > 128 ? 'light' : 'dark'
+                            ));
+                        }
+                    }
+                }
+        
+                // 隐藏上传界面
+                uploadBox.style.display = 'none';
+        
+                // 添加重新上传按钮（仅第一次生成时添加）
+                if (!document.getElementById('reuploadBtn')) {
+                    const btn = document.createElement('button');
+                    btn.id = 'reuploadBtn';
+                    btn.innerHTML = '🔄 更换图片';
+                    btn.style.position = 'fixed';
+                    btn.style.top = '70px';
+                    btn.style.right = '30px';
+                    btn.style.zIndex = 1000;
+                    btn.style.padding = '10px 20px';
+                    btn.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+                    btn.style.border = 'none';
+                    btn.style.borderRadius = '20px';
+                    btn.style.color = 'var(--text-color)';
+                    btn.style.cursor = 'pointer';
+                    btn.style.transition = 'background 0.3s';
+                    btn.onclick = () => window.location.reload();
+                    document.body.appendChild(btn);
+                }
+            } catch (error) {
+                alert('粒子生成失败: ' + error.message);
+                uploadBox.style.display = 'flex';
+            }
+        }
         // 粒子类
         class Particle {
-            constructor(x, y) {
+            constructor(x, y, colorType) {
                 this.originalX = x;
                 this.originalY = y;
                 this.x = x;
                 this.y = y;
                 this.vx = 0;
                 this.vy = 0;
-                this.color = Math.random() > 0.5 ? '#fff' : '#ccc';
+                this.originalColor = colorType;
+                this.baseColor = getParticleColor(colorType);
             }
 
             update() {
-                // 计算鼠标排斥力
-                const dx = this.x - mouse.x;
-                const dy = this.y - mouse.y;
+                // 物理计算逻辑（保持原有核心算法）
+                const dx = this.x - state.mouse.x;
+                const dy = this.y - state.mouse.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
 
-                if (distance < repulsionRadius) {
+                if (distance < CONFIG.repulsionRadius) {
                     const angle = Math.atan2(dy, dx);
-                    const force = (repulsionRadius - distance) / repulsionRadius * repulsionForce;
-                    
+                    const force = (CONFIG.repulsionRadius - distance) / CONFIG.repulsionRadius * CONFIG.repulsionForce;
                     this.vx += Math.cos(angle) * force;
                     this.vy += Math.sin(angle) * force;
                 }
 
-                // 返回原位置的力
-                const returnX = (this.originalX - this.x) * returnSpeed;
-                const returnY = (this.originalY - this.y) * returnSpeed;
-                
+                const returnX = (this.originalX - this.x) * CONFIG.returnSpeed;
+                const returnY = (this.originalY - this.y) * CONFIG.returnSpeed;
                 this.vx += returnX;
                 this.vy += returnY;
-
-                // 应用摩擦
-                this.vx *= (1 - friction);
-                this.vy *= (1 - friction);
-
-                // 更新位置
+                this.vx *= (1 - CONFIG.friction);
+                this.vy *= (1 - CONFIG.friction);
                 this.x += this.vx;
                 this.y += this.vy;
             }
 
             draw() {
-                ctx.fillStyle = this.color;
+                ctx.fillStyle = this.baseColor;
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, particleSize/2, 0, Math.PI * 2);
+                ctx.arc(this.x, this.y, CONFIG.particleSize/2, 0, Math.PI * 2);
                 ctx.fill();
             }
         }
 
-        // 初始化粒子排列（圆形）
-        function initParticles() {
-            particles = [];
-            const centerX = canvas.width/2;
-            const centerY = canvas.height/2;
-            const radius = 150;
-            
-            for (let r = 0; r < radius; r += particleSize + particleMargin) {
-                const circumference = 2 * Math.PI * r;
-                const particlesCount = circumference / (particleSize + particleMargin);
-                
-                for (let i = 0; i < particlesCount; i++) {
-                    const angle = (i / particlesCount) * Math.PI * 2;
-                    const x = centerX + Math.cos(angle) * r;
-                    const y = centerY + Math.sin(angle) * r;
-                    particles.push(new Particle(x, y));
+        /* 事件监听 */
+        
+        // 主题切换
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // 文件上传处理
+        uploadBox.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        
+        // 创建隐藏的文件输入
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*';
+        fileInput.style.display = 'none';
+        document.body.appendChild(fileInput);
+
+        fileInput.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                try {
+                    // 显示加载提示
+                    loadingText.style.display = 'block';
+                    const processedImage = await processImage(file);
+                    generateParticles(processedImage);
+                } catch (error) {
+                    alert('图片处理失败: ' + error.message);
+                } finally {
+                    loadingText.style.display = 'none';
                 }
             }
+        });
+
+        // 拖放上传支持
+        document.addEventListener('dragover', (e) => e.preventDefault());
+        document.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            const file = e.dataTransfer.files[0];
+            if (file?.type.startsWith('image/')) {
+                const processedImage = await processImage(file);
+                generateParticles(processedImage);
+            }
+        });
+
+        // 鼠标移动追踪
+        canvas.addEventListener('mousemove', (e) => {
+            state.mouse.x = e.clientX;
+            state.mouse.y = e.clientY;
+        });
+
+        /* 辅助函数 */
+        
+        function getPixelBrightness(imgData, x, y) {
+            const i = (y * imgData.width + x) * 4;
+            return (imgData.data[i] + imgData.data[i+1] + imgData.data[i+2]) / 3;
         }
 
         // 动画循环
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = state.theme === 'night' ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             
-            particles.forEach(particle => {
-                particle.update();
-                particle.draw();
+            state.particles.forEach(p => {
+                p.update();
+                p.draw();
             });
             
             requestAnimationFrame(animate);
         }
 
-        // 鼠标移动监听
-        canvas.addEventListener('mousemove', (e) => {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        });
-
-        // 启动
-        initParticles();
+        /* 初始化 */
+        initCanvas();
         animate();
     </script>
 </body>
