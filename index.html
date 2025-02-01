@@ -158,6 +158,7 @@
     <div class="upload-container" id="uploadBox">
         <div class="upload-icon">🖼️</div>
         <p>点击或拖拽上传图片</p>
+        <p>建议图片小于1MB，尺寸不超过 1024x1024 px，对比度明显</p>
     </div>
 
     <!-- 画布容器 -->
@@ -168,21 +169,22 @@
 </div>
     <!-- 联系方式 -->
     <div class="contact-btn" title="联系方式">
-        📧 code@example.com
+        📧 联系我 2943984952@qq.com
     </div>
 
     <script>
         // 配置对象
         const CONFIG = {
             particleSize: 3,// 粒子大小，约1mm
-        particleMargin: 1,//粒子间距
-        repulsionRadius: 115,//排斥作用范围
-        repulsionForce: 1.7,//排斥力强度
-        friction: 0.15,//运动摩擦力
-        returnSpeed: 0.01,//返回原位的速度
+            particleMargin: 1,//粒子间距
+            repulsionRadius: 115,//排斥作用范围
+            repulsionForce: 1.7,//排斥力强度
+            friction: 0.15,//运动摩擦力
+            returnSpeed: 0.01,//返回原位的速度
             samplingStep: 5,  // 图像采样步长
             maxDisplayRatio: 0.8, // 最大显示比例为屏幕的80%
-            asyncBatchSize: 200    // 每批生成的粒子数量
+            asyncBatchSize: 200,    // 每批生成的粒子数量
+            maxImageSize: 1024 // 新增最大图像尺寸限制
         };
 
         // 系统状态
@@ -228,7 +230,7 @@
             const isDark = original === 'dark';
             return state.theme === 'night' ? 
             (isDark ? '#333' : '#ccc') : 
-            (isDark ? '#000' : '#ccc');
+            (isDark ? '#ccc' : '#000');
         }
 
         // 图像处理模块
@@ -237,43 +239,60 @@
                 if (!file.type.startsWith('image/')) {
                     return reject(new Error('请选择图片文件'));
                 }
-
+                
                 const img = new Image();
                 img.onload = function() {
                     try {
                         const tempCanvas = document.createElement('canvas');
                         const tempCtx = tempCanvas.getContext('2d');
                         
-                        // 添加尺寸限制
-                        const MAX_SIZE = 2000;
+                        // 计算屏幕显示的最大尺寸
+                        const canvasWidth = window.innerWidth;
+                        const canvasHeight = window.innerHeight;
+                        const maxDisplayWidth = canvasWidth * CONFIG.maxDisplayRatio;
+                        const maxDisplayHeight = canvasHeight * CONFIG.maxDisplayRatio;
+        
                         let width = img.width;
                         let height = img.height;
-
-                        if (width > MAX_SIZE || height > MAX_SIZE) {
-                            const ratio = Math.min(MAX_SIZE/width, MAX_SIZE/height);
+        
+                        // 限制图像尺寸不超过 maxImageSize
+                        if (width > CONFIG.maxImageSize || height > CONFIG.maxImageSize) {
+                            const ratio = Math.min(
+                                CONFIG.maxImageSize / width,
+                                CONFIG.maxImageSize / height
+                            );
                             width *= ratio;
                             height *= ratio;
                         }
-
+        
+                        // 限制图像尺寸不超过屏幕显示范围
+                        if (width > maxDisplayWidth || height > maxDisplayHeight) {
+                            const ratio = Math.min(
+                                maxDisplayWidth / width,
+                                maxDisplayHeight / height
+                            );
+                            width *= ratio;
+                            height *= ratio;
+                        }
+        
                         tempCanvas.width = width;
                         tempCanvas.height = height;
-                        
                         tempCtx.drawImage(img, 0, 0, width, height);
                         resolve(tempCanvas);
                     } catch (error) {
                         reject(error);
                     }
                 };
-                
+        
                 img.onerror = () => reject(new Error('图片加载失败'));
                 img.src = URL.createObjectURL(file);
             });
         }
 
+
         // 生成粒子系统
         function generateParticles(imageCanvas) {
             try {
-                // 边界检查
                 if (!imageCanvas || !imageCanvas.getContext) {
                     throw new Error('无效的画布对象');
                 }
@@ -287,20 +306,35 @@
         
                 // 获取图像数据
                 const imgData = imageCanvas.getContext('2d').getImageData(0, 0, width, height);
-                
+        
                 // 计算居中位置
-                const offsetX = (window.innerWidth - width) / 2;
-                const offsetY = (window.innerHeight - height) / 2;
+                const canvasWidth = window.innerWidth;
+                const canvasHeight = window.innerHeight;
+                const maxDisplayWidth = canvasWidth * CONFIG.maxDisplayRatio;
+                const maxDisplayHeight = canvasHeight * CONFIG.maxDisplayRatio;
+        
+                let displayWidth = Math.min(width, maxDisplayWidth);
+                let displayHeight = Math.min(height, maxDisplayHeight);
+        
+                // 调整图像尺寸以适应 maxDisplayRatio
+                if (width > maxDisplayWidth || height > maxDisplayHeight) {
+                    const ratio = Math.min(maxDisplayWidth / width, maxDisplayHeight / height);
+                    displayWidth = width * ratio;
+                    displayHeight = height * ratio;
+                }
+        
+                const offsetX = (canvasWidth - displayWidth) / 2;
+                const offsetY = (canvasHeight - displayHeight) / 2;
         
                 // 采样图像数据
                 for (let y = 0; y < height; y += CONFIG.samplingStep) {
                     for (let x = 0; x < width; x += CONFIG.samplingStep) {
                         const alpha = imgData.data[(y * width + x) * 4 + 3];
-                        if (alpha > 128) { // 可见像素
+                        if (alpha > 128) {
                             const brightness = getPixelBrightness(imgData, x, y);
                             state.particles.push(new Particle(
-                                x + offsetX,
-                                y + offsetY,
+                                x * (displayWidth / width) + offsetX,
+                                y * (displayHeight / height) + offsetY,
                                 brightness > 128 ? 'light' : 'dark'
                             ));
                         }
@@ -310,7 +344,7 @@
                 // 隐藏上传界面
                 uploadBox.style.display = 'none';
         
-                // 添加重新上传按钮（仅第一次生成时添加）
+                // 添加重新上传按钮
                 if (!document.getElementById('reuploadBtn')) {
                     const btn = document.createElement('button');
                     btn.id = 'reuploadBtn';
@@ -326,7 +360,8 @@
                     btn.style.color = 'var(--text-color)';
                     btn.style.cursor = 'pointer';
                     btn.style.transition = 'background 0.3s';
-                    btn.onclick = () => window.location.reload();
+                    // 修改为触发文件选择器
+                    btn.onclick = () => fileInput.click();
                     document.body.appendChild(btn);
                 }
             } catch (error) {
@@ -334,6 +369,7 @@
                 uploadBox.style.display = 'flex';
             }
         }
+
         // 粒子类
         class Particle {
             constructor(x, y, colorType) {
