@@ -496,7 +496,7 @@
         const CONFIG = {
             particleSize: 3,// 粒子大小，约1mm
             particleMargin: 1,//粒子间距
-            repulsionRadius: 115,//排斥作用范围
+            repulsionRadius: 90,//排斥作用范围
             repulsionForce: 1.7,//排斥力强度
             friction: 0.15,//运动摩擦力
             returnSpeed: 0.01,//返回原位的速度
@@ -556,8 +556,7 @@
 const sidebar = document.getElementById('sidebar');
 const sidebarToggle = document.getElementById('sidebarToggle');
 
-// 初始隐藏侧边栏
-//sidebar.classList.add('collapsed');
+
 
 // 切换侧边栏
 sidebarToggle.addEventListener('click', () => {
@@ -748,24 +747,30 @@ async function processImage(file, img = null) {
             }
 
             update() {
-                // 物理计算逻辑（保持原有核心算法）
                 const dx = this.x - state.mouse.x;
                 const dy = this.y - state.mouse.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
-
+        
+                // 使用平方衰减公式
                 if (distance < CONFIG.repulsionRadius) {
                     const angle = Math.atan2(dy, dx);
-                    const force = (CONFIG.repulsionRadius - distance) / CONFIG.repulsionRadius * CONFIG.repulsionForce;
+                    const ratio = (CONFIG.repulsionRadius - distance) / CONFIG.repulsionRadius;
+                    const force = ratio * ratio * CONFIG.repulsionForce;  // 平方衰减
+                    
                     this.vx += Math.cos(angle) * force;
                     this.vy += Math.sin(angle) * force;
                 }
-
+        
+                // 增强返回原位的力
                 const returnX = (this.originalX - this.x) * CONFIG.returnSpeed;
                 const returnY = (this.originalY - this.y) * CONFIG.returnSpeed;
                 this.vx += returnX;
                 this.vy += returnY;
+                
+                // 增强摩擦系数
                 this.vx *= (1 - CONFIG.friction);
                 this.vy *= (1 - CONFIG.friction);
+                
                 this.x += this.vx;
                 this.y += this.vy;
             }
