@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>方舟粒子特效</title>
+    <title>ArkPoints-明日方舟粒子特效模拟</title>
     <style>
         :root {
             --bg-color: #111;
@@ -18,6 +19,7 @@
             --particle-dark: #666;
             --particle-light: #888;
         }
+
         /* 在日间主题下添加图片反色效果 */
         [data-theme="day"] .sidebar-image {
             filter: invert(1);
@@ -48,12 +50,13 @@
             box-sizing: border-box;
             transition: transform 0.3s ease;
         }
-        
+
         /* 左侧部分样式 */
         .left-section {
             display: flex;
             align-items: center;
-            gap: 15px; /* 左侧元素之间的间距 */
+            gap: 15px;
+            /* 左侧元素之间的间距 */
         }
 
         .brand {
@@ -66,6 +69,19 @@
         }
 
         .brand:hover {
+            opacity: 0.8;
+        }
+
+        .brand2 {
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            color: var(--text-color);
+            transition: opacity 0.3s;
+        }
+
+        .brand2:hover {
             opacity: 0.8;
         }
 
@@ -96,33 +112,38 @@
             margin-bottom: 20px;
         }
 
-/* 容器样式 */
-.contact-btn-container {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    display: flex; /* 使用 flex 布局 */
-    gap: 10px; /* 按钮之间的间距 */
-    z-index: 1000;
-}
+        /* 容器样式 */
+        .contact-btn-container {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            /* 使用 flex 布局 */
+            gap: 10px;
+            /* 按钮之间的间距 */
+            z-index: 1000;
+        }
 
-/* 每个按钮样式 */
-.contact-btn {
-    background: rgba(255, 255, 255, 0.1);
-    padding: 10px 15px;
-    border-radius: 20px;
-    cursor: pointer;
-    transition: all 0.3s;
-    display: flex; /* 确保内容水平排列 */
-    align-items: center; /* 垂直居中 */
-    justify-content: center; /* 水平居中 */
-}
+        /* 每个按钮样式 */
+        .contact-btn {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            /* 确保内容水平排列 */
+            align-items: center;
+            /* 垂直居中 */
+            justify-content: center;
+            /* 水平居中 */
+        }
 
-/* 鼠标悬停效果 */
-.contact-btn:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-}
+        /* 鼠标悬停效果 */
+        .contact-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
 
         /* 新增主题按钮样式 */
         #themeToggle {
@@ -131,7 +152,8 @@
             font-size: 1.5em;
             cursor: pointer;
             padding: 5px;
-            margin-right: -5px; /* 修正边缘间距 */
+            margin-right: -5px;
+            /* 修正边缘间距 */
             color: var(--text-color);
         }
 
@@ -141,13 +163,13 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background: rgba(0,0,0,0.7);
+            background: rgba(0, 0, 0, 0.7);
             color: white;
             padding: 15px 30px;
             border-radius: 25px;
             display: none;
         }
-        
+
         /* 新增进度条样式 */
         #progressBar {
             position: fixed;
@@ -156,11 +178,11 @@
             transform: translateX(-50%);
             width: 200px;
             height: 3px;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 2px;
             display: none;
         }
-        
+
         #progressFill {
             height: 100%;
             background: #00ff88;
@@ -169,110 +191,149 @@
         }
 
         /* 侧边栏样式 */
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 240px;
-    height: 100%;
-    background-color: var(--bg-color);
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
-    z-index: 1001;
-}
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 240px;
+            height: 100%;
+            background-color: var(--bg-color);
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+        }
 
-/* 当侧边栏展开时调整导航栏位置 */
-.sidebar:not(.collapsed) + .nav {
-    padding-left: 240px;
-}
-/* 侧边栏展开时移动导航栏 */
-.sidebar:not(.collapsed) ~ .nav {
-    transform: translateX(240px);
-}
+        /* 当侧边栏展开时调整导航栏位置 */
+        .sidebar:not(.collapsed)+.nav {
+            padding-left: 240px;
+        }
 
-.sidebar.collapsed {
-    transform: translateX(-100%);
-}
+        /* 侧边栏展开时移动导航栏 */
+        .sidebar:not(.collapsed)~.nav {
+            transform: translateX(240px);
+        }
 
-.sidebar:not(.collapsed) {
-    transform: translateX(0);
-}
+        .sidebar.collapsed {
+            transform: translateX(-100%);
+        }
 
-.sidebar-header {
-    padding: 15px;
-    background-color: var(--bg-color);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
+        .sidebar:not(.collapsed) {
+            transform: translateX(0);
+        }
 
-.sidebar-header h3 {
-    color: var(--text-color);
-    margin: 0;
-}
+        .sidebar-header {
+            padding: 15px;
+            background-color: var(--bg-color);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-.sidebar-content {
-    padding: 15px;
-    overflow-y: auto;
-    height: calc(100vh - 70px); /* 计算可用高度 */
-}
+        .sidebar-header h3 {
+            color: var(--text-color);
+            margin: 0;
+        }
 
-.image-list {
-    display: grid;
-    grid-template-columns: repeat(1, 1fr);
-    gap: 10px;
-    padding-bottom: 20px; /* 增加底部留白 */
-}
+        .sidebar-content {
+            padding: 15px;
+            overflow-y: auto;
+            height: calc(100vh - 70px);
+            /* 计算可用高度 */
+        }
 
-.image-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 15px;
-    padding: 8px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 8px;
-    transition: background 0.2s;
-}
+        .image-list {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 10px;
+            padding-bottom: 20px;
+            /* 增加底部留白 */
+        }
 
-.image-item:hover {
-    background: rgba(255,255,255,0.1);
-}
+        .image-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            transition: background 0.2s;
+        }
 
-.sidebar-image {
-    width: auto;
-    height: 130px; /* 固定高度 */
-    object-fit: cover; /* 保持图片比例 */
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
+        .image-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
 
-.image-name {
-    flex: 1;
-    color: var(--text-color);
-}
+        .sidebar-image {
+            width: auto;
+            height: 130px;
+            /* 固定高度 */
+            object-fit: cover;
+            /* 保持图片比例 */
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
 
-.sidebar-image:hover {
-    transform: scale(1.05);
-}
+        .image-name {
+            flex: 1;
+            color: var(--text-color);
+        }
 
-.sidebar-toggle-btn {
-    background: none;
-    border: none;
-    font-size: 1.2em;
-    cursor: pointer;
-    color: var(--text-color);
-    margin-right: 15px;
-    font-size: 1.5em;
-}
-    
+        .sidebar-image:hover {
+            transform: scale(1.05);
+        }
+
+        .sidebar-toggle-btn {
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            cursor: pointer;
+            color: var(--text-color);
+            margin-right: 15px;
+            font-size: 1.5em;
+        }
+
+        @media (max-width: 768px) {
+            /* 移动端屏幕宽度小于768px时的样式 */
+
+            /* 调整导航栏样式 */
+            .nav {
+                padding: 10px 20px;
+            }
+
+
+            /* 调整上传区域的宽度 */
+            .upload-container {
+                width: 80%;
+                height: 40%;
+            }
+
+            /* 调整字体大小 */
+            p {
+                font-size: 0.8em;
+            }
+
+            /* 调整按钮大小 */
+            .contact-btn {
+                justify-content: flex-end;
+                padding: 5px 8px;
+                gap: 5px; 
+                margin-right: -5px; 
+            }
+
+            #reuploadBtn {
+                position: fixed;
+                right: 0px; /* 更靠近右侧 */
+            }
+        }
     </style>
 </head>
+
 <body data-theme="night">
-    
+
     <!-- 导航栏 -->
     <nav class="nav">
         <div class="left-section">
@@ -282,8 +343,8 @@
         <button id="themeToggle" class="theme-toggle-btn">🌙</button>
     </nav>
 
-     <!-- 左侧边栏 -->
-     <div class="sidebar collapsed" id="sidebar">
+    <!-- 左侧边栏 -->
+    <div class="sidebar collapsed" id="sidebar">
         <div class="sidebar-header">
             <h3 style="margin: 0;">阵营图片</h3>
         </div>
@@ -293,167 +354,167 @@
                     <img src="img/罗德岛.png" alt="罗德岛" class="sidebar-image" data-src="img/罗德岛.png">
                     <span class="image-name">罗德岛</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/炎.png" alt="炎" class="sidebar-image" data-src="img/炎.png">
                     <span class="image-name">炎</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/炎-龙门.png" alt="炎-龙门" class="sidebar-image" data-src="img/炎-龙门.png">
                     <span class="image-name">炎-龙门</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/阿戈尔.png" alt="阿戈尔" class="sidebar-image" data-src="img/阿戈尔.png">
                     <span class="image-name">阿戈尔</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/玻利瓦尔.png" alt="玻利瓦尔" class="sidebar-image" data-src="img/玻利瓦尔.png">
                     <span class="image-name">玻利瓦尔</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/哥伦比亚.png" alt="哥伦比亚" class="sidebar-image" data-src="img/哥伦比亚.png">
                     <span class="image-name">哥伦比亚</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/东.png" alt="东" class="sidebar-image" data-src="img/东.png">
                     <span class="image-name">东</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/伊比利亚.png" alt="伊比利亚" class="sidebar-image" data-src="img/伊比利亚.png">
                     <span class="image-name">伊比利亚</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/卡西米尔.png" alt="卡西米尔" class="sidebar-image" data-src="img/卡西米尔.png">
                     <span class="image-name">卡西米尔</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/谢拉格.png" alt="谢拉格" class="sidebar-image" data-src="img/谢拉格.png">
                     <span class="image-name">谢拉格</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/拉特兰.png" alt="拉特兰" class="sidebar-image" data-src="img/拉特兰.png">
                     <span class="image-name">拉特兰</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/莱塔尼亚.png" alt="莱塔尼亚" class="sidebar-image" data-src="img/莱塔尼亚.png">
                     <span class="image-name">莱塔尼亚</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/米诺斯.png" alt="米诺斯" class="sidebar-image" data-src="img/米诺斯.png">
                     <span class="image-name">米诺斯</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/雷姆必拓.png" alt="雷姆必拓" class="sidebar-image" data-src="img/雷姆必拓.png">
                     <span class="image-name">雷姆必拓</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/萨米.png" alt="萨米" class="sidebar-image" data-src="img/萨米.png">
                     <span class="image-name">萨米</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/萨尔贡.png" alt="萨尔贡" class="sidebar-image" data-src="img/萨尔贡.png">
                     <span class="image-name">萨尔贡</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/叙拉古.png" alt="叙拉古" class="sidebar-image" data-src="img/叙拉古.png">
                     <span class="image-name">叙拉古</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/乌萨斯.png" alt="乌萨斯" class="sidebar-image" data-src="img/乌萨斯.png">
                     <span class="image-name">乌萨斯</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/维多利亚.png" alt="维多利亚" class="sidebar-image" data-src="img/维多利亚.png">
                     <span class="image-name">维多利亚</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/罗德岛-精英干员.png" alt="罗德岛-精英干员" class="sidebar-image" data-src="img/罗德岛-精英干员.png">
                     <span class="image-name">罗德岛-精英干员</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/S.W.E.E.P..png" alt="S.W.E.E.P." class="sidebar-image" data-src="img/S.W.E.E.P..png">
                     <span class="image-name">S.W.E.E.P.</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/巴别塔.png" alt="巴别塔" class="sidebar-image" data-src="img/巴别塔.png">
                     <span class="image-name">巴别塔</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/深海猎人.png" alt="深海猎人" class="sidebar-image" data-src="img/深海猎人.png">
                     <span class="image-name">深海猎人</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/黑钢国际.png" alt="黑钢国际" class="sidebar-image" data-src="img/黑钢国际.png">
                     <span class="image-name">黑钢国际</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/格拉斯哥帮.png" alt="格拉斯哥帮" class="sidebar-image" data-src="img/格拉斯哥帮.png">
                     <span class="image-name">格拉斯哥帮</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/喀兰贸易.png" alt="喀兰贸易" class="sidebar-image" data-src="img/喀兰贸易.png">
                     <span class="image-name">喀兰贸易</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/龙门近卫局.png" alt="龙门近卫局" class="sidebar-image" data-src="img/龙门近卫局.png">
                     <span class="image-name">龙门近卫局</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/企鹅物流.png" alt="企鹅物流" class="sidebar-image" data-src="img/企鹅物流.png">
                     <span class="image-name">企鹅物流</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/红松骑士团.png" alt="红松骑士团" class="sidebar-image" data-src="img/红松骑士团.png">
                     <span class="image-name">红松骑士团</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/莱茵生命.png" alt="莱茵生命" class="sidebar-image" data-src="img/莱茵生命.png">
                     <span class="image-name">莱茵生命</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/汐斯塔.png" alt="汐斯塔" class="sidebar-image" data-src="img/汐斯塔.png">
                     <span class="image-name">汐斯塔</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/炎-岁.png" alt="炎-岁" class="sidebar-image" data-src="img/炎-岁.png">
                     <span class="image-name">炎-岁</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/行动组A4.png" alt="行动组A4" class="sidebar-image" data-src="img/行动组A4.png">
                     <span class="image-name">行动组A4</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/行动预备组A1.png" alt="行动预备组A1" class="sidebar-image" data-src="img/行动预备组A1.png">
                     <span class="image-name">行动预备组A1</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/行动预备组A4.png" alt="行动预备组A4" class="sidebar-image" data-src="img/行动预备组A4.png">
                     <span class="image-name">行动预备组A4</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/行动预备组A6.png" alt="行动预备组A6" class="sidebar-image" data-src="img/行动预备组A6.png">
                     <span class="image-name">行动预备组A6</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/贾维团伙.png" alt="贾维团伙" class="sidebar-image" data-src="img/贾维团伙.png">
                     <span class="image-name">贾维团伙</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/使徒.png" alt="使徒" class="sidebar-image" data-src="img/使徒.png">
                     <span class="image-name">使徒</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/鲤氏侦探事务所.png" alt="鲤氏侦探事务所" class="sidebar-image" data-src="img/鲤氏侦探事务所.png">
                     <span class="image-name">鲤氏侦探事务所</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/彩虹小队.png" alt="彩虹小队" class="sidebar-image" data-src="img/彩虹小队.png">
                     <span class="image-name">彩虹小队</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/乌萨斯学生自治团.png" alt="乌萨斯学生自治团" class="sidebar-image" data-src="img/乌萨斯学生自治团.png">
                     <span class="image-name">乌萨斯学生自治团</span>
                 </div>
-<div class="image-item">
+                <div class="image-item">
                     <img src="img/深池.png" alt="深池" class="sidebar-image" data-src="img/深池.png">
                     <span class="image-name">深池</span>
                 </div>
@@ -469,28 +530,28 @@
         <p>点击或拖拽上传图片</p>
         <p>建议图片小于1MB，尺寸不超过 1024x1024 px，对比度明显</p>
     </div>
-   
+
     <!-- 画布容器 -->
     <canvas id="canvas"></canvas>
- <!-- 在画布后添加进度条 -->
- <div id="progressBar">
-    <div id="progressFill"></div>
-</div>
-<div class="contact-btn-container">
-    <div class="contact-btn" title="素材来源">
-        <a href="https://wiki.biligame.com/arknights/?curid=1" target="_blank">
-            <img src="img/bwiki.png" alt="明日方舟bwiki" width="80" height="40">
+    <!-- 在画布后添加进度条 -->
+    <div id="progressBar">
+        <div id="progressFill"></div>
+    </div>
+    <div class="contact-btn-container">
+        <div class="contact-btn" title="素材来源">
+            <a href="https://wiki.biligame.com/arknights/?curid=1" target="_blank">
+                <img src="img/bwiki.png" alt="明日方舟bwiki" width="80" height="40">
+            </a>
+        </div>
+        <div class="contact-btn" title="github">
+            <a href="https://github.com/BlackCoder0/Arknights-FlowingPoints" target="_blank">
+                <img src="img/github2.png" alt="github" width="40" height="40"">
         </a>
     </div>
-    <div class="contact-btn" title="github"> 
-        <a href="https://github.com/BlackCoder0/Arknights-FlowingPoints" target="_blank">
-            <img src="img/github2.png" alt="github" width="40" height="40"">
-        </a>
+    <div class=" contact-btn" title="联系方式">
+                <a href="mailto:2943984952@qq.com" class="brand2">📧 Code</a>
+        </div>
     </div>
-    <div class="contact-btn" title="联系方式">
-        <a href="mailto:2943984952@qq.com" class="brand">📧 Code</a>
-    </div>
-</div>
     <script>
         // 配置对象
         const CONFIG = {
@@ -521,7 +582,7 @@
         const uploadBox = document.getElementById('uploadBox');
 
         /* 核心功能模块 */
-        
+
         // 初始化画布
         function initCanvas() {
             canvas.width = window.innerWidth;
@@ -537,7 +598,7 @@
             state.theme = state.theme === 'night' ? 'day' : 'night';
             document.body.setAttribute('data-theme', state.theme);
             themeToggle.textContent = state.theme === 'night' ? '🌙' : '☀️';
-            
+
             // 更新现有粒子颜色
             state.particles.forEach(p => {
                 p.baseColor = getParticleColor(p.originalColor);
@@ -547,111 +608,111 @@
         // 获取粒子颜色
         function getParticleColor(original) {
             const isDark = original === 'dark';
-            return state.theme === 'night' ? 
-            (isDark ? '#333' : '#ccc') : 
-            (isDark ? '#ccc' : '#000');
+            return state.theme === 'night' ?
+                (isDark ? '#333' : '#ccc') :
+                (isDark ? '#ccc' : '#000');
         }
 
-// 侧边栏开关
-const sidebar = document.getElementById('sidebar');
-const sidebarToggle = document.getElementById('sidebarToggle');
+        // 侧边栏开关
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebarToggle');
 
 
 
-// 切换侧边栏
-sidebarToggle.addEventListener('click', () => {
-    sidebar.classList.toggle('collapsed');
-});
+        // 切换侧边栏
+        sidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+        });
 
-// 处理侧边栏图片点击事件
-document.querySelectorAll('.sidebar-image').forEach(image => {
-    image.addEventListener('click', async () => {
-        const file = {
-            type: 'image/png', 
-            name: image.alt,
-            src: image.dataset.src
-        };
+        // 处理侧边栏图片点击事件
+        document.querySelectorAll('.sidebar-image').forEach(image => {
+            image.addEventListener('click', async () => {
+                const file = {
+                    type: 'image/png',
+                    name: image.alt,
+                    src: image.dataset.src
+                };
 
-        try {
-            // 显示加载提示
-            loadingText.style.display = 'block';
-            const img = new Image();
-            img.src = image.dataset.src;
+                try {
+                    // 显示加载提示
+                    loadingText.style.display = 'block';
+                    const img = new Image();
+                    img.src = image.dataset.src;
 
-            // 调用 processImage 函数处理图片
-            const processedImage = await processImage(file, img);
-            generateParticles(processedImage);
-        } catch (error) {
-            console.error('图片处理失败:', error);
-            alert('图片处理失败: ' + error.message);
-        } finally {
-            loadingText.style.display = 'none';
-        }
-    });
-});
+                    // 调用 processImage 函数处理图片
+                    const processedImage = await processImage(file, img);
+                    generateParticles(processedImage);
+                } catch (error) {
+                    console.error('图片处理失败:', error);
+                    alert('图片处理失败: ' + error.message);
+                } finally {
+                    loadingText.style.display = 'none';
+                }
+            });
+        });
 
-/// 图片处理模块
-async function processImage(file, img = null) {
-    return new Promise((resolve, reject) => {
-        if (!file.type.startsWith('image/')) {
-            return reject(new Error('请选择图片文件'));
-        }
-
-        if (!img) {
-            img = new Image();
-        }
-
-        img.onload = function() {
-            try {
-                const tempCanvas = document.createElement('canvas');
-                const tempCtx = tempCanvas.getContext('2d');
-
-                // 计算屏幕显示的最大尺寸
-                const canvasWidth = window.innerWidth;
-                const canvasHeight = window.innerHeight;
-                const maxDisplayWidth = canvasWidth * CONFIG.maxDisplayRatio;
-                const maxDisplayHeight = canvasHeight * CONFIG.maxDisplayRatio;
-
-                let width = img.width;
-                let height = img.height;
-
-                // 限制图像尺寸不超过 maxImageSize
-                if (width > CONFIG.maxImageSize || height > CONFIG.maxImageSize) {
-                    const ratio = Math.min(
-                        CONFIG.maxImageSize / width,
-                        CONFIG.maxImageSize / height
-                    );
-                    width *= ratio;
-                    height *= ratio;
+        /// 图片处理模块
+        async function processImage(file, img = null) {
+            return new Promise((resolve, reject) => {
+                if (!file.type.startsWith('image/')) {
+                    return reject(new Error('请选择图片文件'));
                 }
 
-                // 限制图像尺寸不超过屏幕显示范围
-                if (width > maxDisplayWidth || height > maxDisplayHeight) {
-                    const ratio = Math.min(
-                        maxDisplayWidth / width,
-                        maxDisplayHeight / height
-                    );
-                    width *= ratio;
-                    height *= ratio;
+                if (!img) {
+                    img = new Image();
                 }
 
-                tempCanvas.width = width;
-                tempCanvas.height = height;
-                tempCtx.drawImage(img, 0, 0, width, height);
-                resolve(tempCanvas);
-            } catch (error) {
-                reject(error);
-            }
-        };
+                img.onload = function () {
+                    try {
+                        const tempCanvas = document.createElement('canvas');
+                        const tempCtx = tempCanvas.getContext('2d');
 
-        img.onerror = () => {
-            reject(new Error('图片加载失败，请检查图片路径或文件是否正确'));
-        };
+                        // 计算屏幕显示的最大尺寸
+                        const canvasWidth = window.innerWidth;
+                        const canvasHeight = window.innerHeight;
+                        const maxDisplayWidth = canvasWidth * CONFIG.maxDisplayRatio;
+                        const maxDisplayHeight = canvasHeight * CONFIG.maxDisplayRatio;
 
-        // 设置图片路径
-        img.src = img.src || URL.createObjectURL(file);
-    });
-}
+                        let width = img.width;
+                        let height = img.height;
+
+                        // 限制图像尺寸不超过 maxImageSize
+                        if (width > CONFIG.maxImageSize || height > CONFIG.maxImageSize) {
+                            const ratio = Math.min(
+                                CONFIG.maxImageSize / width,
+                                CONFIG.maxImageSize / height
+                            );
+                            width *= ratio;
+                            height *= ratio;
+                        }
+
+                        // 限制图像尺寸不超过屏幕显示范围
+                        if (width > maxDisplayWidth || height > maxDisplayHeight) {
+                            const ratio = Math.min(
+                                maxDisplayWidth / width,
+                                maxDisplayHeight / height
+                            );
+                            width *= ratio;
+                            height *= ratio;
+                        }
+
+                        tempCanvas.width = width;
+                        tempCanvas.height = height;
+                        tempCtx.drawImage(img, 0, 0, width, height);
+                        resolve(tempCanvas);
+                    } catch (error) {
+                        reject(error);
+                    }
+                };
+
+                img.onerror = () => {
+                    reject(new Error('图片加载失败，请检查图片路径或文件是否正确'));
+                };
+
+                // 设置图片路径
+                img.src = img.src || URL.createObjectURL(file);
+            });
+        }
 
         // 生成粒子系统
         function generateParticles(imageCanvas) {
@@ -663,32 +724,32 @@ async function processImage(file, img = null) {
                 if (width <= 0 || height <= 0) {
                     throw new Error('无效的图片尺寸');
                 }
-        
+
                 // 清空现有粒子
                 state.particles = [];
-        
+
                 // 获取图像数据
                 const imgData = imageCanvas.getContext('2d').getImageData(0, 0, width, height);
-        
+
                 // 计算居中位置
                 const canvasWidth = window.innerWidth;
                 const canvasHeight = window.innerHeight;
                 const maxDisplayWidth = canvasWidth * CONFIG.maxDisplayRatio;
                 const maxDisplayHeight = canvasHeight * CONFIG.maxDisplayRatio;
-        
+
                 let displayWidth = Math.min(width, maxDisplayWidth);
                 let displayHeight = Math.min(height, maxDisplayHeight);
-        
+
                 // 调整图像尺寸以适应 maxDisplayRatio
                 if (width > maxDisplayWidth || height > maxDisplayHeight) {
                     const ratio = Math.min(maxDisplayWidth / width, maxDisplayHeight / height);
                     displayWidth = width * ratio;
                     displayHeight = height * ratio;
                 }
-        
+
                 const offsetX = (canvasWidth - displayWidth) / 2;
                 const offsetY = (canvasHeight - displayHeight) / 2;
-        
+
                 // 采样图像数据
                 for (let y = 0; y < height; y += CONFIG.samplingStep) {
                     for (let x = 0; x < width; x += CONFIG.samplingStep) {
@@ -703,10 +764,10 @@ async function processImage(file, img = null) {
                         }
                     }
                 }
-        
+
                 // 隐藏上传界面
                 uploadBox.style.display = 'none';
-        
+
                 // 添加重新上传按钮
                 if (!document.getElementById('reuploadBtn')) {
                     const btn = document.createElement('button');
@@ -750,27 +811,27 @@ async function processImage(file, img = null) {
                 const dx = this.x - state.mouse.x;
                 const dy = this.y - state.mouse.y;
                 const distance = Math.sqrt(dx * dx + dy * dy);
-        
+
                 // 使用平方衰减公式
                 if (distance < CONFIG.repulsionRadius) {
                     const angle = Math.atan2(dy, dx);
                     const ratio = (CONFIG.repulsionRadius - distance) / CONFIG.repulsionRadius;
                     const force = ratio * ratio * CONFIG.repulsionForce;  // 平方衰减
-                    
+
                     this.vx += Math.cos(angle) * force;
                     this.vy += Math.sin(angle) * force;
                 }
-        
+
                 // 增强返回原位的力
                 const returnX = (this.originalX - this.x) * CONFIG.returnSpeed;
                 const returnY = (this.originalY - this.y) * CONFIG.returnSpeed;
                 this.vx += returnX;
                 this.vy += returnY;
-                
+
                 // 增强摩擦系数
                 this.vx *= (1 - CONFIG.friction);
                 this.vy *= (1 - CONFIG.friction);
-                
+
                 this.x += this.vx;
                 this.y += this.vy;
             }
@@ -778,13 +839,13 @@ async function processImage(file, img = null) {
             draw() {
                 ctx.fillStyle = this.baseColor;
                 ctx.beginPath();
-                ctx.arc(this.x, this.y, CONFIG.particleSize/2, 0, Math.PI * 2);
+                ctx.arc(this.x, this.y, CONFIG.particleSize / 2, 0, Math.PI * 2);
                 ctx.fill();
             }
         }
 
         /* 事件监听 */
-        
+
         // 主题切换
         themeToggle.addEventListener('click', toggleTheme);
 
@@ -792,8 +853,8 @@ async function processImage(file, img = null) {
         uploadBox.addEventListener('click', () => {
             fileInput.click();
         });
-        
-        
+
+
         // 创建隐藏的文件输入
         const fileInput = document.createElement('input');
         fileInput.type = 'file';
@@ -834,11 +895,26 @@ async function processImage(file, img = null) {
             state.mouse.y = e.clientY;
         });
 
+        // 触摸事件监听
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // 阻止默认事件
+            const touch = e.touches[0];
+            state.mouse.x = touch.clientX;
+            state.mouse.y = touch.clientY;
+        });
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault(); // 阻止默认事件
+            const touch = e.touches[0];
+            state.mouse.x = touch.clientX;
+            state.mouse.y = touch.clientY;
+        });
+
         /* 辅助函数 */
-        
+
         function getPixelBrightness(imgData, x, y) {
             const i = (y * imgData.width + x) * 4;
-            return (imgData.data[i] + imgData.data[i+1] + imgData.data[i+2]) / 3;
+            return (imgData.data[i] + imgData.data[i + 1] + imgData.data[i + 2]) / 3;
         }
 
         // 动画循环
@@ -846,12 +922,12 @@ async function processImage(file, img = null) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = state.theme === 'night' ? 'rgba(0,0,0,0.1)' : 'rgba(255,255,255,0.1)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
+
             state.particles.forEach(p => {
                 p.update();
                 p.draw();
             });
-            
+
             requestAnimationFrame(animate);
         }
 
@@ -860,4 +936,5 @@ async function processImage(file, img = null) {
         animate();
     </script>
 </body>
+
 </html>
