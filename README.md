@@ -4,7 +4,7 @@
 [![素材来源](https://img.shields.io/badge/素材-bwiki明日方舟-8A2BE2?style=flat)](https://wiki.biligame.com/arknights/?curid=1)
 
 **🌌 明日方舟同款粒子特效复刻版**  
-上传图片即可生成可交互粒子系统，完美还原官网黑科技特效！✨
+上传图片即可生成可交互粒子系统，基本还原官网粒子特效！✨
 
 <div style="text-align: center;">
   <!-- 图片1 -->
@@ -40,8 +40,13 @@
 | 多触点手势支持     | 物理引擎模拟       | 自动图像优化      |
 | 粒子光效渲染       | 流畅动画过渡       | 移动端适配        |
 
+## 
+深深感谢 DeepSeek
+作者在制作过程中抽出了新春限定，可喜可贺
+
 ## 🚀 极速体验
 
 ```bash
 # 点击即玩
-前往 https://www.arkpoints.top
+前往 https://www.arkpoints.top（域名申请ing）
+
