@@ -3,8 +3,8 @@
 const CONFIG = {
     particleSize: 3,// 粒子大小，约1mm
     particleMargin: 1,//粒子间距
-    repulsionRadius: 90,//排斥作用范围
-    repulsionForce: 1.7,//排斥力强度
+    repulsionRadius: 105,//排斥作用范围
+    repulsionForce: 1.8,//排斥力强度
     friction: 0.15,//运动摩擦力
     returnSpeed: 0.01,//返回原位的速度
     samplingStep: 5,  // 图像采样步长
