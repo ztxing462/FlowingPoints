@@ -1,0 +1,312 @@
+
+:root {
+    --bg-color: #111;
+    --text-color: #fff;
+    --particle-dark: #333;
+    --particle-light: #ccc;
+}
+
+[data-theme="day"] {
+    --bg-color: #f0f0f0;
+    --text-color: #333;
+    --particle-dark: #666;
+    --particle-light: #888;
+}
+
+/* 在日间主题下添加图片反色效果 */
+[data-theme="day"] .sidebar-image {
+    filter: invert(1);
+    opacity: 0.8;
+    transition: filter 0.3s ease;
+}
+
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    transition: background 0.3s ease;
+}
+
+/* 导航栏样式 */
+.nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 12px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1002;
+    background: var(--bg-color);
+    box-sizing: border-box;
+    transition: transform 0.3s ease;
+}
+
+/* 左侧部分样式 */
+.left-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    /* 左侧元素之间的间距 */
+}
+
+.brand {
+    font-size: 1.8em;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: opacity 0.3s;
+}
+
+.brand:hover {
+    opacity: 0.8;
+}
+
+.brand2 {
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    color: var(--text-color);
+    transition: opacity 0.3s;
+}
+
+.brand2:hover {
+    opacity: 0.8;
+}
+
+/* 上传区域样式 */
+.upload-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 300px;
+    border: 2px dashed var(--text-color);
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.3s;
+}
+
+.upload-container:hover {
+    border-color: var(--particle-light);
+}
+
+.upload-icon {
+    font-size: 3em;
+    margin-bottom: 20px;
+}
+
+/* 容器样式 */
+.contact-btn-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+    z-index: 1000;
+}
+
+/* 每个按钮样式 */
+.contact-btn {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 鼠标悬停效果 */
+.contact-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+/* 新增主题按钮样式 */
+#themeToggle {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    padding: 5px;
+    margin-right: -5px;
+    color: var(--text-color);
+}
+
+/* 新增上传反馈样式 */
+.upload-loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 15px 30px;
+    border-radius: 25px;
+    display: none;
+}
+
+/* 新增进度条样式 */
+#progressBar {
+    position: fixed;
+    top: 60%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    display: none;
+}
+
+#progressFill {
+    height: 100%;
+    background: #00ff88;
+    width: 0%;
+    transition: width 0.3s ease;
+}
+
+/* 侧边栏样式 */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 240px;
+    height: 100%;
+    background-color: var(--bg-color);
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 1001;
+}
+
+/* 当侧边栏展开时调整导航栏位置 */
+.sidebar:not(.collapsed)+.nav {
+    padding-left: 240px;
+}
+.sidebar:not(.collapsed)~.nav {
+    transform: translateX(240px);
+}
+
+.sidebar.collapsed {
+    transform: translateX(-100%);
+}
+
+.sidebar:not(.collapsed) {
+    transform: translateX(0);
+}
+
+.sidebar-header {
+    padding: 15px;
+    background-color: var(--bg-color);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sidebar-header h3 {
+    color: var(--text-color);
+    margin: 0;
+}
+
+.sidebar-content {
+    padding: 15px;
+    overflow-y: auto;
+    height: calc(100vh - 70px);
+}
+
+.image-list {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: 10px;
+    padding-bottom: 20px;
+}
+
+.image-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 15px;
+    padding: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    transition: background 0.2s;
+}
+
+.image-item:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-image {
+    width: auto;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.image-name {
+    flex: 1;
+    color: var(--text-color);
+}
+
+.sidebar-image:hover {
+    transform: scale(1.05);
+}
+
+.sidebar-toggle-btn {
+    background: none;
+    border: none;
+    font-size: 1.2em;
+    cursor: pointer;
+    color: var(--text-color);
+    margin-right: 15px;
+    font-size: 1.5em;
+}
+
+@media (max-width: 768px) {
+    /* 移动端屏幕宽度小于768px时的样式 */
+
+    /* 导航栏样式 */
+    .nav {
+        padding: 10px 20px;
+    }
+
+
+    /* 上传区域的宽度 */
+    .upload-container {
+        width: 80%;
+        height: 40%;
+    }
+
+    /* 字体大小 */
+    p {
+        font-size: 0.8em;
+    }
+
+    /* 按钮大小 */
+    .contact-btn {
+        justify-content: flex-end;
+        padding: 5px 8px;
+        gap: 5px; 
+        margin-right: -5px; 
+    }
+
+    #reuploadBtn {
+        position: fixed;
+        right: 0px; 
+    }
+}
