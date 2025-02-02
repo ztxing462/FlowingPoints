@@ -10,8 +10,23 @@ const CONFIG = {
     samplingStep: 5,  // 图像采样步长
     maxDisplayRatio: 0.8, // 最大显示比例为屏幕的80%
     asyncBatchSize: 200,    // 每批生成的粒子数量
-    maxImageSize: 1024 // 最大图像尺寸限制
+    maxImageSize: 1024,  // 最大图像尺寸限制
+    mobile: {
+        repulsionRadius: 150,
+        repulsionForce: 2.5,
+        friction: 0.18
+    },
 };
+
+// 在初始化时检测设备类型
+const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+if(isMobile) {
+    Object.assign(CONFIG, {
+        repulsionRadius: CONFIG.mobile.repulsionRadius,
+        repulsionForce: CONFIG.mobile.repulsionForce,
+        friction: CONFIG.mobile.friction
+    });
+}
 
 // 系统状态
 let state = {
