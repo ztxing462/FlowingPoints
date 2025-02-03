@@ -81,6 +81,8 @@ body {
 .brand-logo {
     height: 45px; /* 电脑端默认大小 */
     width: auto;
+    max-width: 80px; 
+    object-fit: contain; 
     display: block;
 }
 
@@ -377,9 +379,11 @@ body {
     }
     .brand-logo {
         height: 35px; /* 移动端稍小 */
+        max-width: 60px; 
     }
     .brand {
         gap: 4px; /* 缩小间距 */
+
     }
     .subtitle {
         font-size: 0.6em; /* 主标题字号的60% */
