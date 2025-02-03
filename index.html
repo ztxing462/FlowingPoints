@@ -19,13 +19,20 @@
 <body data-theme="night">
 
     <!-- 导航栏 -->
-    <nav class="nav">
-        <div class="left-section">
-            <a href="index.html" class="brand">Ark-Points</a>
-            <button id="sidebarToggle" class="sidebar-toggle-btn">☰</button>
-        </div>
-        <button id="themeToggle" class="theme-toggle-btn">🌙</button>
-    </nav>
+<nav class="nav">
+    <div class="left-section">
+        <a href="index.html" class="brand">
+            Ark-Points
+            <span class="subtitle">方舟粒子特效</span>
+        </a>
+        <button id="sidebarToggle" class="sidebar-toggle-btn">☰</button>
+    </div>
+    
+    <!-- 电脑端专用标题 -->
+    <p class="nav-title desktop-title">明日方舟粒子特效模拟</p>
+    
+    <button id="themeToggle" class="theme-toggle-btn">🌙</button>
+</nav>
 
     <!-- 左侧边栏 -->
     <div class="sidebar collapsed" id="sidebar">
@@ -211,8 +218,8 @@
     <!-- 上传区域 -->
     <div class="upload-container" id="uploadBox">
         <div class="upload-icon">🖼️</div>
-        <p>点击或拖拽上传图片</p>
-        <p>建议图片小于1MB，尺寸不超过 1024x1024 px，对比度明显</p>
+        <p>点击或拖拽上传图片，进行粒子化</p>
+        <p>建议大小<1MB，尺寸<1024x1024 px，对比度明显</p>
     </div>
 
     <!-- 画布容器 -->
@@ -229,11 +236,11 @@
         </div>
         <div class="contact-btn" title="github">
             <a href="https://github.com/BlackCoder0/Arknights-FlowingPoints" target="_blank">
-                <img src="img/github2.png" alt="github" width="40" height="40"">
+                <img src="img/github2.png" alt="github" width="40" height="40" style="filter: invert(100%);">
         </a>
     </div>
     <div class=" contact-btn" title="联系方式">
-                <a href="mailto:2943984952@qq.com" class="brand2">📧 Code</a>
+                <a href="mailto:2943984952@qq.com" class="brand2">📧@Code</a>
         </div>
     </div>
 

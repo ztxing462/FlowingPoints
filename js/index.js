@@ -12,8 +12,8 @@ const CONFIG = {
     asyncBatchSize: 200,    // 每批生成的粒子数量
     maxImageSize: 1024,  // 最大图像尺寸限制
     mobile: {
-        repulsionRadius: 150,
-        repulsionForce: 2.5,
+        repulsionRadius: 110,
+        repulsionForce: 2.1,
         friction: 0.18
     },
 };
