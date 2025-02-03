@@ -20,6 +20,10 @@
     transition: filter 0.3s ease;
 }
 
+[data-theme="day"] .brand-logo {
+    filter: invert(1); /* 日间主题反色 */
+}
+
 body {
     margin: 0;
     font-family: 'Arial', sans-serif;
@@ -72,6 +76,12 @@ body {
 
 .brand:hover {
     opacity: 0.8;
+}
+
+.brand-logo {
+    height: 45px; /* 电脑端默认大小 */
+    width: auto;
+    display: block;
 }
 
 .brand2 {
@@ -307,6 +317,35 @@ body {
         margin-left: auto; /* 主题按钮靠右 */
     }
 
+    .sidebar {
+        width: 40vw; /* 改为视口宽度比例 */
+        max-width: 250px; /* 最大宽度限制 */
+    }
+
+    .sidebar-image {
+        height: 90px !important; /* 缩小图片高度 */
+        object-fit: contain; /* 保持图片比例 */
+    }
+
+    .image-item {
+        flex-direction: column; /* 改为垂直布局 */
+        align-items: flex-start;
+        padding: 6px;
+    }
+
+    .image-name {
+        font-size: 0.9em; /* 缩小文字 */
+        margin-top: 5px;
+    }
+
+    /* 取消导航栏位移 */
+    .sidebar:not(.collapsed)+.nav {
+        padding-left: 0;
+    }
+    .sidebar:not(.collapsed)~.nav {
+        transform: none;
+    }
+
     .sidebar-toggle-btn {
         margin-right: 10px;
         font-size: 1.3em;
@@ -336,17 +375,11 @@ body {
         position: fixed;
         right: 0px; 
     }
-
+    .brand-logo {
+        height: 35px; /* 移动端稍小 */
+    }
     .brand {
-        font-size: 1.3em;
-        font-weight: bold;
-        cursor: pointer;
-        text-decoration: none;
-        color: var(--text-color);
-        transition: opacity 0.3s;
-        display: flex;
-        flex-direction: column;
-        line-height: 1.2;
+        gap: 4px; /* 缩小间距 */
     }
     .subtitle {
         font-size: 0.6em; /* 主标题字号的60% */
@@ -363,6 +396,6 @@ body {
 }
 @media (min-width: 769px) {
     .subtitle {
-        display: none;
+        display: none; /* 保持原有副标题隐藏 */
     }
 }

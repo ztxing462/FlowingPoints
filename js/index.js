@@ -78,7 +78,23 @@ function getParticleColor(original) {
 const sidebar = document.getElementById('sidebar');
 const sidebarToggle = document.getElementById('sidebarToggle');
 
-
+// 添加侧边栏外部点击关闭功能
+document.addEventListener('click', (e) => {
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    
+    // 如果侧边栏处于展开状态
+    if (!sidebar.classList.contains('collapsed')) {
+        // 判断点击目标是否是侧边栏或开关按钮
+        const isSidebar = sidebar.contains(e.target);
+        const isToggle = sidebarToggle.contains(e.target);
+        
+        // 如果点击的是侧边栏外部区域
+        if (!isSidebar && !isToggle) {
+            sidebar.classList.add('collapsed');
+        }
+    }
+});
 
 // 切换侧边栏
 sidebarToggle.addEventListener('click', () => {
