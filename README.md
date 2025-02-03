@@ -10,26 +10,26 @@
   <!-- 图片1 -->
   <div style="margin: 30px 0;">
     <p style="margin: 5px 0;">开始界面</p>
-    <img src="img/开始页面.png" width="60%" alt="开始界面">
+    <img src="img/开始页面.gif" width="60%" alt="开始界面">
   </div>
 
   <!-- 图片2 -->
   <div style="margin: 30px 0;">
     <p style="margin: 5px 0;">黑夜模式</p>
-    <img src="img/粒子特效-黑.png" width="60%" alt="黑夜模式">
+    <img src="img/粒子特效-黑.gif" width="60%" alt="黑夜模式">
     
   </div>
 
   <!-- 图片3 -->
   <div style="margin: 30px 0;">
     <p style="margin: 5px 0;">白天模式</p>
-    <img src="img/粒子特效-白.png" width="60%" alt="白天模式">
+    <img src="img/粒子特效-白.gif" width="60%" alt="白天模式">
   </div>
 
   <!-- 自定义图片演示 -->
   <div style="margin: 30px 0;">
     <p style="margin: 5px 0;">自定义图片效果</p>
-    <img src="img/badapple.png" width="60%" alt="自定义图片效果">
+    <img src="img/badapple.gif" width="60%" alt="自定义图片效果">
   </div>
 </div>
 
