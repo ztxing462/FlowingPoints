@@ -95,6 +95,27 @@ document.addEventListener('click', (e) => {
         }
     }
 });
+function getCorrectedTouchPos(e, canvas) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+        x: e.touches[0].clientX - rect.left,
+        y: e.touches[0].clientY - rect.top
+    };
+}
+
+canvas.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    const pos = getCorrectedTouchPos(e, canvas);
+    state.mouse.x = pos.x;
+    state.mouse.y = pos.y;
+});
+
+canvas.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    const pos = getCorrectedTouchPos(e, canvas);
+    state.mouse.x = pos.x;
+    state.mouse.y = pos.y;
+});
 
 // 切换侧边栏
 sidebarToggle.addEventListener('click', () => {
