@@ -407,7 +407,45 @@ canvas.addEventListener('touchmove', (e) => {
     state.mouse.x = touch.clientX;
     state.mouse.y = touch.clientY;
 });
+// 在现有代码中添加一个变量用来记录用户输入的内容
+let inputBuffer = '';
 
+document.addEventListener('keydown', (e) => {
+    // 检测是否按下了字母键
+    if (e.key.match(/^[a-z]$/i)) {
+        inputBuffer += e.key.toLowerCase(); // 将输入的字符转为小写并添加到输入缓冲区
+    } else if (e.key === 'Backspace') {
+        inputBuffer = inputBuffer.slice(0, -1); // 删除最后一个字符
+    }
+
+    // 检测输入是否包含 "amiya"
+    if (inputBuffer.includes('amiya')) {
+        triggerEasterEgg();
+        inputBuffer = ''; // 重置输入缓冲区
+    }
+});
+
+// 触发彩蛋的函数
+function triggerEasterEgg() {
+    // 显示页面角落的提示
+    const easterEggNotice = document.getElementById('easterEggNotice');
+    easterEggNotice.style.display = 'block';
+    setTimeout(() => {
+        easterEggNotice.style.display = 'none'; // 3秒后自动隐藏提示
+    }, 3000);
+
+    // 在控制台输出提示
+    console.log('🎉彩蛋触发成功！这里是阿米娅！');
+
+    // 加载 Amiya 的图片并更新粒子系统
+    const amiyaImage = new Image();
+    amiyaImage.src = 'img/amiya.jpg';
+    amiyaImage.onload = () => {
+        processImage({ type: 'image/png', name: 'Amiya', src: 'img/amiya.png' }, amiyaImage)
+            .then(generateParticles)
+            .catch(error => console.error('彩蛋加载失败:', error));
+    };
+}
 /* 辅助函数 */
 
 function getPixelBrightness(imgData, x, y) {
