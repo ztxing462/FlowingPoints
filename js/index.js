@@ -11,10 +11,10 @@ const CONFIG = {
     maxDisplayRatio: 0.8, // 最大显示比例为屏幕的80%
     asyncBatchSize: 200,    // 每批生成的粒子数量
     maxImageSize: 1024,  // 最大图像尺寸限制
-    mobile: {
-        repulsionRadius: 110,
-        repulsionForce: 2.1,
-        friction: 0.18
+    mobile: {//移动端
+        repulsionRadius: 78,
+        repulsionForce: 1.9,
+        friction: 0.16
     },
 };
 

@@ -52,5 +52,5 @@
 
 ## 🚀 点击进入我的网站
 
-前往 https://www.arkpoints.top
+前往 https://arkpoints.top
 

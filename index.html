@@ -7,29 +7,29 @@
     <title>ArkPoints-明日方舟粒子特效模拟</title>
     <link rel="stylesheet" href="css/index.css">
     <link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96" />
-<link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
-<link rel="shortcut icon" href="favicon/favicon.ico" />
-<link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
-<link rel="manifest" href="favicon/site.webmanifest" />
+    <link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
+    <link rel="shortcut icon" href="favicon/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+    <link rel="manifest" href="favicon/site.webmanifest" />
 
 </head>
 
 <body data-theme="night">
     <!-- 导航栏 -->
-<nav class="nav">
-    <div class="left-section">
-        <a href="index.html" class="brand">
-            <img src="favicon/white_on_trans.png" class="brand-logo" alt="Ark-Points">
-            <span class="subtitle">方舟粒子特效</span>
-        </a>
-        <button id="sidebarToggle" class="sidebar-toggle-btn">☰</button>
-    </div>
-    
-    <!-- 电脑端专用标题 -->
-    <p class="nav-title desktop-title">明日方舟粒子特效模拟</p>
-    
-    <button id="themeToggle" class="theme-toggle-btn">🌙</button>
-</nav>
+    <nav class="nav">
+        <div class="left-section">
+            <a href="index.html" class="brand">
+                <img src="favicon/white_on_trans.png" class="brand-logo" alt="Ark-Points">
+                <span class="subtitle">方舟粒子特效</span>
+            </a>
+            <button id="sidebarToggle" class="sidebar-toggle-btn">☰</button>
+        </div>
+
+        <!-- 电脑端专用标题 -->
+        <p class="nav-title desktop-title">明日方舟粒子特效模拟</p>
+
+        <button id="themeToggle" class="theme-toggle-btn">🌙</button>
+    </nav>
 
     <!-- 左侧边栏 -->
     <div class="sidebar collapsed" id="sidebar">
@@ -226,7 +226,8 @@
         <div id="progressFill"></div>
     </div>
 
-    <div id="easterEggNotice" style="display: none; position: fixed; bottom: 20px; left: 20px; padding: 10px; background: rgba(0, 0, 0, 0.8); color: white; border-radius: 5px;">
+    <div id="easterEggNotice"
+        style="display: none; position: fixed; bottom: 20px; left: 20px; padding: 10px; background: rgba(0, 0, 0, 0.8); color: white; border-radius: 5px;">
         🔥彩蛋触发成功！这里是阿米娅！
     </div>
     <div class="contact-btn-container">
@@ -238,15 +239,20 @@
         <div class="contact-btn" title="github">
             <a href="https://github.com/BlackCoder0/Arknights-FlowingPoints" target="_blank">
                 <img src="img/github2.png" alt="github" width="40" height="40" style="filter: invert(100%);">
-        </a>
-    </div>
-    <div class=" contact-btn" title="联系方式">
-                <a href="mailto:2943984952@qq.com" class="brand2">📧@Code</a>
+            </a>
+        </div>
+        <div class="contact-btn" title="联系方式">
+            <a href="mailto:&#50;&#57;&#52;&#51;&#57;&#56;&#52;&#57;&#53;&#50;&#64;&#113;&#113;&#46;&#99;&#111;&#109;" class="brand2">📧@Code</a>
         </div>
     </div>
 
 
     <script src="js/index.js"></script>
+    <script>
+        document.write('<a href="mailto:' + 
+            String.fromCharCode(50, 57, 52, 51, 57, 56, 52, 57, 53, 50, 64, 113, 113, 46, 99, 111, 109) + 
+            '" class="brand2">📧@Code</a>');
+    </script>
 </body>
 
 </html>
