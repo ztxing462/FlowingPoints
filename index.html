@@ -11,7 +11,7 @@
     <link rel="shortcut icon" href="favicon/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
     <link rel="manifest" href="favicon/site.webmanifest" />
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 </head>
 
 <body data-theme="night">
@@ -237,25 +237,16 @@
             </a>
         </div>
         <div class="contact-btn" title="github">
-            <a href="https://github.com/BlackCoder0/Arknights-FlowingPoints    " target="_blank">
-                <img src="img/github2.png" alt="github" width="40" height="40" style="filter: invert(100%);">
-            </a>
+            <div class="fab fa-github" style="font-size: 43px;line-height: 60px;"></div>
         </div>
         <div class="contact-btn" title="联系方式">
-            <button id="reveal-email">联系我</button>
+            <a href="mailto:" id="email-link"></a>
+            <div class="fas fa-envelope" style="font-size: 25px;line-height: 60px;"></div><p>@Code</p>
+            </a>
         </div>
     </div>
 
-
     <script src="js/index.js"></script>
-    <script>
-        document.getElementById('reveal-email').addEventListener('click', function() {
-          // 使用 String.fromCharCode 动态生成邮箱地址
-          var email = String.fromCharCode(50,57,52,51,57,56,52,57,53,50,64,113,113,46,99,111,109);
-          // 替换按钮为链接
-          this.outerHTML = '<a href="mailto:' + email + '" class="brand2">📧@Code</a>';
-        });
-      </script>
 </body>
 
 </html>

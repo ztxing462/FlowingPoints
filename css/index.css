@@ -298,6 +298,10 @@ body {
     font-size: 1.5em;
 }
 
+/*邮箱 */
+.email-address {
+    display: none;
+}
 @media (max-width: 768px) {
     /* 移动端屏幕宽度小于768px时的样式 */
 
