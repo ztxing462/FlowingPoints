@@ -469,7 +469,7 @@ function animate() {
 
 
 //联系方式
-document.getElementById('email-link').href = 'mailto:2943984952@qq.com';
+document.getElementById('email-link').href = 'mailto:' + '2943984952' + '@qq.com';
 
 /* 初始化 */
 initCanvas();

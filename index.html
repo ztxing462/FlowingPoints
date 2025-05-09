@@ -232,19 +232,36 @@
     </div>
     <div class="contact-btn-container">
         <div class="contact-btn" title="素材来源">
-            <a href="https://wiki.biligame.com/arknights/?curid=1    " target="_blank">
+            <a href="https://wiki.biligame.com/arknights/?curid=1" target="_blank">
                 <img src="img/bwiki.png" alt="明日方舟bwiki" width="80" height="40">
             </a>
         </div>
         <div class="contact-btn" title="github">
-            <div class="fab fa-github" style="font-size: 43px;line-height: 60px;"></div>
+            <a href="https://github.com/BlackCoder0/Arknights-FlowingPoints" target="_blank" class="icon-link">
+                <div class="fab fa-github" style="font-size: 43px;line-height: 60px;color: #fff;"></div>
+            </a>
         </div>
         <div class="contact-btn" title="联系方式">
-            <a href="mailto:" id="email-link"></a>
-            <div class="fas fa-envelope" style="font-size: 25px;line-height: 60px;"></div><p>@Code</p>
+            <a href="#" id="email-link" class="icon-link">
+                <div class="fas fa-envelope" style="font-size: 25px;line-height: 60px;color: #fff;margin-right:8px;"></div>
+                <span style="font-size:16px;color:#fff;">@Code</span>
             </a>
         </div>
     </div>
+    <style>
+        .contact-btn a.icon-link {
+            display: flex;
+            align-items: center;
+            color: #fff !important;
+            text-decoration: none !important;
+        }
+        .contact-btn a.icon-link:visited {
+            color: #fff !important;
+        }
+        .contact-btn a.icon-link:hover {
+            opacity: 0.8;
+        }
+    </style>
 
     <script src="js/index.js"></script>
 </body>
