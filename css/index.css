@@ -166,6 +166,29 @@ body {
 }
 
 /* 新增上传反馈样式 */
+/* 基础样式重置 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #000;
+    color: #fff;
+    overflow: hidden;
+}
+
+/* 画布样式 */
+canvas {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+/* 加载文本样式 */
 .upload-loading {
     position: fixed;
     top: 50%;
@@ -176,6 +199,7 @@ body {
     padding: 15px 30px;
     border-radius: 25px;
     display: none;
+    z-index: 1000;
 }
 
 /* 新增进度条样式 */
