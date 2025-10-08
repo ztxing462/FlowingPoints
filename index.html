@@ -28,6 +28,33 @@
             font-size: 18px;
             z-index: 1000;
         }
+        /* BGM控制按钮样式 */
+        #bgmControl {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        #bgmControl:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        #bgmControl.muted {
+            background-color: rgba(255, 0, 0, 0.2);
+        }
     </style>
 </head>
 
@@ -37,6 +64,37 @@
 
     <!-- 画布容器 -->
     <canvas id="canvas"></canvas>
+    
+    <!-- 音频元素 -->
+    <audio id="bgm" loop preload="metadata" crossorigin="anonymous">
+        <source src="bgm/lovely.mp3" type="audio/mpeg">
+        您的浏览器不支持音频元素。
+    </audio>
+    
+    <!-- BGM控制按钮 -->
+    <div id="bgmControl" title="点击切换音乐">🎵</div>
+    
+    <!-- 倒计时提示元素 -->
+    <div id="countdown提示" style="
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        font-size: 36px;
+        font-weight: bold;
+        text-align: center;
+        z-index: 1001;
+        display: none;
+        background-color: rgba(0, 0, 0, 0.7);
+        padding: 30px;
+        border-radius: 10px;
+        backdrop-filter: blur(5px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    ">
+        <div id="countdownText">在5秒后向屏幕吹气</div>
+        <div id="countdownNumber" style="font-size: 72px; margin: 20px 0;">5</div>
+    </div>
 
     <script src="js/index.js"></script>
 </body>

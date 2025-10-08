@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>最小化音频测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; margin-top: 50px; }
+    </style>
+</head>
+<body>
+    <h1>最小化音频测试</h1>
+    <p>这是一个简单的音频测试页面</p>
+    
+    <!-- 使用最简单的音频元素 -->
+    <audio controls>
+        <source src="bgm/lovely.mp3" type="audio/mpeg">
+        您的浏览器不支持音频元素。
+    </audio>
+    
+    <script>
+        console.log('页面已加载');
+        // 简单的错误处理
+        const audio = document.querySelector('audio');
+        audio.addEventListener('error', function(e) {
+            console.error('音频加载错误:', audio.error);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>音频测试</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .controls { margin: 20px 0; }
+        button { padding: 10px; margin-right: 10px; }
+        #status { margin-top: 20px; padding: 10px; background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h1>音频文件加载测试</h1>
+    
+    <div class="audio-container">
+        <audio id="testAudio" controls crossorigin="anonymous">
+            <source src="bgm/lovely.mp3" type="audio/mpeg">
+            您的浏览器不支持音频元素。
+        </audio>
+    </div>
+    
+    <div class="controls">
+        <button id="playBtn">播放</button>
+        <button id="pauseBtn">暂停</button>
+        <button id="checkBtn">检查音频状态</button>
+    </div>
+    
+    <div id="status">
+        <h3>状态日志：</h3>
+        <div id="log"></div>
+    </div>
+
+    <script>
+        const audio = document.getElementById('testAudio');
+        const playBtn = document.getElementById('playBtn');
+        const pauseBtn = document.getElementById('pauseBtn');
+        const checkBtn = document.getElementById('checkBtn');
+        const log = document.getElementById('log');
+
+        function addLog(message) {
+            const logItem = document.createElement('div');
+            logItem.textContent = new Date().toLocaleTimeString() + ': ' + message;
+            log.appendChild(logItem);
+            console.log(message);
+        }
+
+        // 添加音频事件监听器
+        audio.addEventListener('loadstart', () => addLog('开始加载音频文件...'));
+        audio.addEventListener('loadedmetadata', () => addLog('已加载音频元数据: ' + audio.duration + '秒'));
+        audio.addEventListener('loadeddata', () => addLog('已加载音频数据'));
+        audio.addEventListener('progress', () => {
+            if (audio.buffered.length > 0) {
+                const percent = (audio.buffered.end(0) / audio.duration) * 100;
+                addLog('加载进度: ' + percent.toFixed(1) + '%');
+            }
+        });
+        audio.addEventListener('canplay', () => addLog('可以开始播放了'));
+        audio.addEventListener('play', () => addLog('开始播放'));
+        audio.addEventListener('pause', () => addLog('暂停播放'));
+        audio.addEventListener('ended', () => addLog('播放结束'));
+        audio.addEventListener('timeupdate', () => {
+            // 每5秒记录一次播放位置
+            if (Math.floor(audio.currentTime) % 5 === 0 && Math.floor(audio.currentTime) > 0) {
+                addLog('播放位置: ' + audio.currentTime.toFixed(1) + '秒');
+            }
+        });
+        audio.addEventListener('error', (e) => {
+            addLog('音频错误: ' + e.type);
+            if (audio.error) {
+                switch(audio.error.code) {
+                    case MediaError.MEDIA_ERR_ABORTED:
+                        addLog('错误代码: MEDIA_ERR_ABORTED - 音频加载被中止');
+                        break;
+                    case MediaError.MEDIA_ERR_NETWORK:
+                        addLog('错误代码: MEDIA_ERR_NETWORK - 网络错误导致音频加载失败');
+                        break;
+                    case MediaError.MEDIA_ERR_DECODE:
+                        addLog('错误代码: MEDIA_ERR_DECODE - 音频解码错误');
+                        break;
+                    case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                        addLog('错误代码: MEDIA_ERR_SRC_NOT_SUPPORTED - 音频格式不支持');
+                        break;
+                    default:
+                        addLog('错误代码: ' + audio.error.code + ' - 未知错误');
+                }
+            }
+        });
+
+        // 按钮事件
+        playBtn.addEventListener('click', () => {
+            addLog('尝试播放...');
+            audio.play().then(() => {
+                addLog('播放成功');
+            }).catch(error => {
+                addLog('播放失败: ' + error.message);
+            });
+        });
+
+        pauseBtn.addEventListener('click', () => {
+            audio.pause();
+        });
+
+        checkBtn.addEventListener('click', () => {
+            addLog('当前音频状态检查:');
+            addLog('src: ' + audio.src);
+            addLog('readyState: ' + audio.readyState);
+            addLog('networkState: ' + audio.networkState);
+            addLog('error: ' + (audio.error ? JSON.stringify(audio.error) : 'null'));
+        });
+
+        addLog('页面加载完成，音频元素已创建');
+    </script>
+</body>
+</html>

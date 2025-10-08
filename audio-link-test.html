@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>音频链接测试</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .audio-section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        a {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            text-align: center;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        a:hover {
+            background-color: #45a049;
+        }
+        audio {
+            width: 100%;
+            margin-top: 10px;
+        }
+        .info {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            font-size: 14px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h1>音频链接测试</h1>
+    <div class="audio-section">
+        <h2>方法1：HTML5 音频元素</h2>
+        <audio controls>
+            <source src="bgm/lovely.mp3" type="audio/mpeg">
+            您的浏览器不支持音频元素。
+        </audio>
+        
+        <h2>方法2：直接链接</h2>
+        <a href="bgm/lovely.mp3" target="_blank">🔊 点击此处直接打开音频文件</a>
+        
+        <h2>方法3：下载链接</h2>
+        <a href="bgm/lovely.mp3" download="lovely.mp3">💾 下载音频文件</a>
+    </div>
+    
+    <div class="info">
+        <p><strong>关于错误的说明：</strong></p>
+        <p>如果您看到 "net::ERR_ABORTED http://localhost:8001/bgm/lovely.mp3" 错误，这可能是由于以下原因：</p>
+        <ol>
+            <li>浏览器安全策略阻止自动加载音频</li>
+            <li>音频文件路径或权限问题</li>
+            <li>浏览器的音频编解码器问题</li>
+            <li>网络连接问题</li>
+        </ol>
+        <p>请尝试使用上面的替代方法来访问和播放音频文件。</p>
+    </div>
+    
+    <script>
+        // 简单的错误跟踪
+        const audio = document.querySelector('audio');
+        if (audio) {
+            audio.addEventListener('error', function() {
+                console.log('音频元素错误:', audio.error);
+                if (audio.error) {
+                    console.log('错误代码:', audio.error.code);
+                }
+            });
+        }
+        
+        console.log('测试页面已加载，当前URL:', window.location.href);
+    </script>
+</body>
+</html>
