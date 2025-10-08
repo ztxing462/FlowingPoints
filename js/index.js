@@ -495,7 +495,7 @@ function setupKeyboardEasterEgg() {
     let isImageBackground = false;
     // 不需要使用originalBgImage变量，因为粒子系统会处理图片加载
     // 使用'img/开始页面.gif'作为彩蛋背景图片，这是一个更适合全屏显示的图片
-    const easterEggBgImage = 'img/amiya.jpg';
+    const easterEggBgImage = 'img/happy_birthday.jpeg';
     
     // 获取倒计时提示元素
     const countdown提示 = document.getElementById('countdown提示');
