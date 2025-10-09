@@ -287,7 +287,7 @@ function loadAndProcessAmiyaImage(callback) {
             callback();
         }
     };
-    amiyaImage.src = 'img/amiya.jpg'; // 使用amiya.jpg作为背景图片
+    amiyaImage.src = 'img/first_page.jpg'; // 使用amiya.jpg作为背景图片
 }
 
 // 动画循环
@@ -535,9 +535,14 @@ function setupKeyboardEasterEgg() {
                     }
                 });
                 
-                // 特效开始后立即隐藏倒计时提示，确保特效与提示消失时间同步
+                // 特效开始后立即隐藏倒计时提示和彩蛋悬浮框，确保特效与提示消失时间同步
                 setTimeout(() => {
                     countdown提示.style.display = 'none';
+                    // 隐藏彩蛋悬浮框
+                    const easterEggHint = document.getElementById('easterEggHint');
+                    if (easterEggHint) {
+                        easterEggHint.style.display = 'none';
+                    }
                 }, 100); // 短暂延迟确保特效已经开始
             }
         }, 1000);
@@ -831,6 +836,11 @@ function setupKeyboardEasterEgg() {
                         isImageBackground = true;
                         console.log('切换到图片背景');
                     });
+                    
+                    // 在倒计时结束后立即触发烟花特效
+                    setTimeout(() => {
+                        createFireworks();
+                    }, 5000); // 5秒倒计时结束后立即触发
                 } else {
                     // 切换回原始背景
                     console.log('恢复原始背景');
@@ -856,6 +866,239 @@ function setupKeyboardEasterEgg() {
     });
 }
 
+// 烟花特效函数 - 右侧播放带拖尾效果
+function createFireworks() {
+    const fireworksContainer = document.getElementById('fireworksContainer');
+    if (!fireworksContainer) return;
+    
+    // 显示烟花容器
+    fireworksContainer.style.display = 'block';
+    
+    // 创建烟花效果
+    const colors = ['#ff0000', '#ff9900', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff'];
+    const fireworkCount = 12; // 增加烟花数量
+    
+    for (let i = 0; i < fireworkCount; i++) {
+        setTimeout(() => {
+            createSingleFireworkWithTrail(fireworksContainer, colors);
+        }, i * 400); // 每个烟花间隔400毫秒
+    }
+    
+    // 15秒后隐藏烟花容器
+    setTimeout(() => {
+        fireworksContainer.style.display = 'none';
+        // 清空容器内容
+        fireworksContainer.innerHTML = '';
+    }, 15000);
+}
+
+// 创建带拖尾效果的单个烟花
+function createSingleFireworkWithTrail(container, colors) {
+    // 只在右侧区域发射烟花（屏幕宽度的右侧1/3）
+    const containerWidth = container.clientWidth;
+    const containerHeight = container.clientHeight;
+    const rightAreaStart = containerWidth * 2 / 3;
+    
+    // 烟花发射起点（右侧底部）
+    const startX = rightAreaStart + Math.random() * (containerWidth - rightAreaStart);
+    const startY = containerHeight;
+    
+    // 烟花爆炸目标点（右侧上方）
+    const targetX = startX + (Math.random() - 0.5) * 100; // 在起点附近随机偏移
+    const targetY = containerHeight * 0.3 + Math.random() * containerHeight * 0.4; // 屏幕上半部分
+    
+    // 创建烟花发射体
+    const firework = document.createElement('div');
+    firework.style.position = 'absolute';
+    firework.style.width = '6px';
+    firework.style.height = '6px';
+    firework.style.borderRadius = '50%';
+    firework.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    firework.style.boxShadow = '0 0 15px currentColor';
+    firework.style.left = startX + 'px';
+    firework.style.top = startY + 'px';
+    firework.style.zIndex = '1000';
+    
+    container.appendChild(firework);
+    
+    // 拖尾粒子数组
+    const trailParticles = [];
+    
+    // 烟花发射动画（带拖尾）
+    animateFireworkLaunch(firework, trailParticles, startX, startY, targetX, targetY, colors, container);
+}
+
+// 烟花发射动画（带拖尾效果）
+function animateFireworkLaunch(firework, trailParticles, startX, startY, targetX, targetY, colors, container) {
+    const duration = 1200; // 发射持续时间
+    const startTime = Date.now();
+    
+    const animate = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        // 抛物线运动
+        const currentX = startX + (targetX - startX) * progress;
+        const currentY = startY + (targetY - startY) * progress;
+        
+        // 添加抛物线弧度
+        const arcHeight = 100;
+        const arcY = -Math.sin(progress * Math.PI) * arcHeight;
+        
+        firework.style.left = currentX + 'px';
+        firework.style.top = (currentY + arcY) + 'px';
+        
+        // 创建拖尾粒子
+        if (elapsed % 30 < 15) { // 每30毫秒创建一个拖尾粒子
+            createTrailParticle(currentX, currentY + arcY, colors, container, trailParticles);
+        }
+        
+        if (progress < 1) {
+            requestAnimationFrame(animate);
+        } else {
+            // 到达目标点后爆炸
+            firework.remove();
+            createFireworkExplosion(targetX, targetY, colors, container);
+            
+            // 移除所有拖尾粒子
+            trailParticles.forEach(particle => {
+                if (particle.parentNode === container) {
+                    particle.remove();
+                }
+            });
+        }
+    };
+    
+    animate();
+}
+
+// 创建拖尾粒子
+function createTrailParticle(x, y, colors, container, trailParticles) {
+    const trail = document.createElement('div');
+    trail.style.position = 'absolute';
+    trail.style.width = '3px';
+    trail.style.height = '3px';
+    trail.style.borderRadius = '50%';
+    trail.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+    trail.style.boxShadow = '0 0 8px currentColor';
+    trail.style.left = x + 'px';
+    trail.style.top = y + 'px';
+    trail.style.opacity = '0.7';
+    
+    container.appendChild(trail);
+    trailParticles.push(trail);
+    
+    // 拖尾粒子渐隐动画
+    animateTrailParticle(trail);
+}
+
+// 拖尾粒子动画
+function animateTrailParticle(trail) {
+    let opacity = 0.7;
+    
+    const animate = () => {
+        opacity -= 0.05;
+        trail.style.opacity = opacity.toString();
+        
+        if (opacity > 0) {
+            requestAnimationFrame(animate);
+        } else {
+            if (trail.parentNode) {
+                trail.remove();
+            }
+        }
+    };
+    
+    animate();
+}
+
+// 烟花爆炸效果
+function createFireworkExplosion(x, y, colors, container) {
+    const particleCount = 40; // 增加爆炸粒子数量
+    const particles = [];
+    
+    for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.style.position = 'absolute';
+        particle.style.width = '4px';
+        particle.style.height = '4px';
+        particle.style.borderRadius = '50%';
+        particle.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.boxShadow = '0 0 10px currentColor';
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+        particle.style.zIndex = '1001';
+        
+        container.appendChild(particle);
+        particles.push(particle);
+        
+        // 粒子扩散动画
+        const angle = (i / particleCount) * Math.PI * 2;
+        const speed = 3 + Math.random() * 4; // 增加爆炸速度
+        const vx = Math.cos(angle) * speed;
+        const vy = Math.sin(angle) * speed;
+        
+        animateExplosionParticle(particle, vx, vy);
+    }
+}
+
+// 爆炸粒子动画
+function animateExplosionParticle(particle, vx, vy) {
+    let currentX = parseFloat(particle.style.left);
+    let currentY = parseFloat(particle.style.top);
+    let opacity = 1;
+    
+    const animate = () => {
+        currentX += vx;
+        currentY += vy;
+        opacity -= 0.015; // 减慢渐隐速度
+        
+        particle.style.left = currentX + 'px';
+        particle.style.top = currentY + 'px';
+        particle.style.opacity = opacity.toString();
+        
+        if (opacity > 0) {
+            requestAnimationFrame(animate);
+        } else {
+            if (particle.parentNode) {
+                particle.remove();
+            }
+        }
+    };
+    
+    animate();
+}
+
+// 设置彩蛋悬浮框
+function setupEasterEggHint() {
+    const easterEggHint = document.getElementById('easterEggHint');
+    if (easterEggHint) {
+        // 确保彩蛋悬浮框完全不可点击
+        easterEggHint.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        });
+        
+        // 阻止所有鼠标事件
+        easterEggHint.addEventListener('mousedown', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        });
+        
+        easterEggHint.addEventListener('mouseup', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            return false;
+        });
+        
+        // 移除pointer-events: none设置，允许鼠标悬停检测
+        // 保持cursor: default确保不可点击
+        easterEggHint.style.cursor = 'default';
+    }
+}
+
 // 初始化函数
 function initApp() {
     initCanvas();
@@ -866,6 +1109,8 @@ function initApp() {
     setupBGMControl();
     // 设置键盘彩蛋
     setupKeyboardEasterEgg();
+    // 设置彩蛋悬浮框
+    setupEasterEggHint();
 }
 
 // 当页面DOM加载完成后初始化应用
